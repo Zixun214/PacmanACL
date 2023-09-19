@@ -1,0 +1,31 @@
+@startuml
+
+package Model #indigo{
+    abstract class Case
+    class CaseTresor
+    class CaseMur
+    abstract class Entitee
+    class EntiteePJ
+    abstract class EntiteePNJ
+    class EntiteeMonstre
+    class PlateauDeJeu{
+        ArrayList <Case> cases
+        ArrayList <Entitee> entitees
+    }
+    class Game
+
+    CaseTresor --> Case
+    CaseMur --> Case
+    EntiteeMonstre --> EntiteePNJ
+    EntiteePNJ --> Entitee
+    EntiteePJ --> Entitee
+
+    PlateauDeJeu --"*" Case
+    PlateauDeJeu --"*" Entitee
+
+    Game --"1" PlateauDeJeu
+}
+
+package View #DarkOrange{}
+
+@enduml
