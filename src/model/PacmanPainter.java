@@ -17,8 +17,8 @@ public class PacmanPainter implements GamePainter {
 	/**
 	 * la taille des cases
 	 */
-	protected static final int WIDTH = 300;
-	protected static final int HEIGHT = 300;
+	protected static final int WIDTH = 960;
+	protected static final int HEIGHT = 540;
 
 	/**
 	 * appelle constructeur parent
