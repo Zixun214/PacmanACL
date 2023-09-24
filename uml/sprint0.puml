@@ -9,8 +9,6 @@ package Jeu #LightBlue{
     abstract class EntiteePNJ
     class EntiteeMonstre
     class PlateauDeJeu{
-        ArrayList <Case> cases
-        ArrayList <Entitee> entitees
     }
 
     CaseTresor --|> Case
