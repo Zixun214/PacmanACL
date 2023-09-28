@@ -2,9 +2,12 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 
 import engine.GamePainter;
+import jeu.EntiteeMonstre;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -17,14 +20,13 @@ public class PacmanPainter implements GamePainter {
 	/**
 	 * la taille des cases
 	 */
-	protected static final int WIDTH = 960;
-	protected static final int HEIGHT = 540;
+	public static final int WIDTH = 960;
+	public static final int HEIGHT = 540;
 
 	/**
 	 * appelle constructeur parent
 	 * 
-	 * @param game
-	 *            le jeutest a afficher
+	 * le jeutest a afficher
 	 */
 	public PacmanPainter() {
 	}
@@ -37,6 +39,13 @@ public class PacmanPainter implements GamePainter {
 		Graphics2D crayon = (Graphics2D) im.getGraphics();
 		crayon.setColor(Color.blue);
 		crayon.fillOval(PacmanGame.posPacmanX,PacmanGame.posPacmanY,10,10);
+
+		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
+			EntiteeMonstre monstre = it.next();
+			Graphics2D g2d = (Graphics2D) im.getGraphics();
+			g2d.setColor(Color.red);
+			g2d.fill(new Ellipse2D.Double(monstre.positionX, monstre.positionY, 10, 10));
+		}
 	}
 
 	@Override

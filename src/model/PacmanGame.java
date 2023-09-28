@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import engine.Cmd;
 import engine.Game;
+import jeu.PlateauDeJeu;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -25,10 +26,16 @@ public class PacmanGame implements Game {
 	public static int posPacmanY;
 
 	/**
+	 * le plateau de jeu
+	 */
+	public static PlateauDeJeu plateauDeJeu;
+
+	/**
 	 * constructeur avec fichier source pour le help
 	 * 
 	 */
 	public PacmanGame(String source) {
+		this.plateauDeJeu = new PlateauDeJeu();
 		initialisation();
 		BufferedReader helpReader;
 		try {
