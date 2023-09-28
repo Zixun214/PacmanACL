@@ -7,8 +7,11 @@ public class PlateauDeJeu {
 
     private final int largeur = 20;
     private final int hauteur = 20;
-    private final int nombreDeMonstre = 10;
+    private final int nombreDeMonstre = 5;
     private ArrayList<Case> cases;
+
+    private CaseTresor caseTresors;
+
     private ArrayList<Entitee> entitees;
 
     private ArrayList<EntiteeMonstre> entiteeMonstres;
@@ -18,6 +21,7 @@ public class PlateauDeJeu {
             this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
             this.entitees = new ArrayList<>();
             this.entiteeMonstres = new ArrayList<>();
+            this.caseTresors = new CaseTresor();
             genererPlateau();
     }
 
@@ -37,11 +41,19 @@ public class PlateauDeJeu {
         initialiserMonstre();
     }
 
+    /**
+     * Génére les cases trésors
+     */
+    public void genererCaseTresor(){
+        //TODO : pas encore d'idée
+    }
+
     /***
      * Génère le plateau de jeu avec les cases (trésor, mur, etc.)
      */
     public void genererPlateau() {
         genererMonstre();
+        genererCaseTresor();
         //TODO: Générer le plateau de jeu
     }
 
@@ -61,6 +73,17 @@ public class PlateauDeJeu {
      */
     public Iterator<EntiteeMonstre> monstreIterator() {
         return this.entiteeMonstres.iterator();
+    }
+
+    /**
+     * @return l'instance du trésor dans le plateau
+     */
+    public int getCaseTresorPositionX(){
+        return this.caseTresors.positionX;
+    }
+
+    public int getCaseTresorPositionY(){
+        return this.caseTresors.positionY;
     }
 
 }

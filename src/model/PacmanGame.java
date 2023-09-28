@@ -65,7 +65,7 @@ public class PacmanGame implements Game {
 	public void evolve(Cmd commande) {
 		if(commande == Cmd.IDLE)
 			return;
-		System.out.println("Execute "+commande);
+		//System.out.println("Execute " + commande);
 		switch (commande){
 			case UP :
 				PacmanGame.posPacmanY-=10;//pour affichage
