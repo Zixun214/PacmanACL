@@ -1,0 +1,128 @@
+@startuml
+
+package Jeu #LightBlue{
+    abstract class Case {
+      boolean blocking
+      boolean isBlocking()
+      boolean setBlocking(boolean isBlocking)
+    }
+    class CaseTresor{
+      int positionX
+      int positionY
+    }
+    class CaseMur
+    abstract class Entitee
+    class EntiteePJ
+    abstract class EntiteePNJ
+    class EntiteeMonstre{
+      int positionX
+      int positionY
+    }
+    class PlateauDeJeu{
+      int largeur
+      int hauteur
+      int nombreDeMonstre
+      
+      void initialiserMonstre()
+      void genererMonstre()
+      void genererCaseTresor()
+      void genererPlateau()
+      Case getCase(int x, int y)
+      Iterator<EntiteeMonstre> monstreIterator()
+      int getTresorPositionX()
+      int getCaseTresorPositionY()
+    }
+
+    CaseTresor --|> Case
+    CaseMur --|> Case
+    EntiteeMonstre --|> EntiteePNJ
+    EntiteePNJ --|> Entitee
+    EntiteePJ --|> Entitee
+
+    PlateauDeJeu --"*" Case
+    PlateauDeJeu --"*" Entitee
+}
+
+package Graphique #DarkOrange{
+
+    enum Cmd{
+      LEFT 
+      RIGHT
+      UP
+      DOWN
+      IDLE
+    }
+
+    interface Game{
+        void evolve(Cmd userCmd)
+        boolean isFinished()
+    }
+
+    class PacmanGame{
+        int posPacmanX
+        int posPacmanY
+        int iniPosX
+        int iniPosY
+        void initialisation()
+        void evolve(Cmd commande)
+        boolean isFinished()
+    }
+
+    interface GameController{
+        Cmd getCommand()
+    }
+
+    class PacmanGameController{
+        void keyPressed(keyEvent e)
+        void keyReleased(keyEvent e)
+        void keyTyped(KeyEvent e)
+    }
+
+    interface GamePainter{
+        void draw(BufferedImage im)
+        int getWidth()
+        int getHeight()
+    }
+
+    class PacmanPainter{
+        int width
+        int height
+        void draw(BufferedImage im)
+        int getWidth()
+        int getHeight()
+    }
+
+    class DrawingPanel{
+        BufferedImage nextImage
+        BufferedImage currentImage
+        int width
+        int height
+        void drawGame()
+        paint(graphics g)
+    }
+
+    class GraphicalInterface{
+        void paint()
+    }
+
+    class GameEngineGraphical{
+        void run()
+    }
+
+    PacmanGame -.-|> Game
+    PacmanGameController -.-|> GameController
+    PacmanPainter -.-|> GamePainter
+
+    DrawingPanel --"1" GamePainter
+    GraphicalInterface --"1" DrawingPanel
+
+    GameEngineGraphical --"1" GraphicalInterface
+    GameEngineGraphical --"1" Game
+    GameEngineGraphical --"1" GameController
+    PacmanGameController --"1" Cmd
+    GameEngineGraphical --"1" GamePainter
+}
+
+PacmanGame --"1" PlateauDeJeu
+
+@enduml
