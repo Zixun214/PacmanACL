@@ -19,8 +19,9 @@ public class PacmanGame implements Game {
 	/**
 	 * position initiale de pacman
 	 */
-	protected static final int iniPosX=50;
-	protected static final int iniPosY=50;
+	public static final int cercleDiametre = 10;
+	protected static final int iniPosX= 90 - cercleDiametre / 2;
+	protected static final int iniPosY= 90 - cercleDiametre / 2;
 
 	public static int posPacmanX;
 	public static int posPacmanY;
@@ -68,16 +69,16 @@ public class PacmanGame implements Game {
 		//System.out.println("Execute " + commande);
 		switch (commande){
 			case UP :
-				PacmanGame.posPacmanY-=10;//pour affichage
+				if(PacmanGame.posPacmanY - 60 > 60) PacmanGame.posPacmanY-=60;//pour affichage
 				break;
 			case DOWN:
-				PacmanGame.posPacmanY+=10;
+				if(PacmanGame.posPacmanY + 60 < 480) PacmanGame.posPacmanY+=60;
 				break;
 			case LEFT:
-				PacmanGame.posPacmanX-=10;
+				if(PacmanGame.posPacmanX - 60 > 60) PacmanGame.posPacmanX-=60;
 				break;
 			case RIGHT:
-				PacmanGame.posPacmanX+=10;
+				if(PacmanGame.posPacmanX + 60 < 900) PacmanGame.posPacmanX+=60;
 				break;
 		}
 	}
