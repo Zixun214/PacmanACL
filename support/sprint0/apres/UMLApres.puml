@@ -1,0 +1,147 @@
+@startuml
+
+package jeu #LightBlue{
+    class CaseMur
+    abstract class Entitee
+    class EntiteePJ
+    abstract class EntiteePNJ
+    class PlateauDeJeu{
+    }
+
+    CaseTresor --|> Case
+    CaseMur --|> Case
+    EntiteeMonstre --|> EntiteePNJ
+    EntiteePNJ --|> Entitee
+    EntiteePJ --|> Entitee
+
+    PlateauDeJeu --"*" Case
+    PlateauDeJeu --"*" Entitee
+    
+    class PlateauDeJeu{
+        int largeur;
+        int hauteur;
+        int nombreDeMonstre;
+        void initialiserMonstre();
+        void genererMonstre();
+        void genererTresor();
+        void genererPlateau();
+        Case getCase(int x, int y);
+        Iterator<EntiteeMonstre> monstreIterator()
+        getCaseTresorPOsitionX();
+        getCaseTresorPOsitionY();
+    }
+    
+    abstract class Case{
+       Random random;
+       boolean blocking;
+       boolean isBlocking();
+       void setBlocking(boolean isBlocking);
+    }
+    
+    class CaseTresor{
+      int positionX;
+      int positionY;
+      void initialiserCaseTresor();
+    }
+    
+    class Entitee(){
+        Random random;
+    }
+    
+    class EntiteeMonstre{
+        int positionX;
+        int positionY;
+        void initialiserMonstre();
+    }
+    
+}
+
+package model #LightGreen{
+    class PacmanGame{
+        int posPacmanX
+        int posPacmanY
+        int cercleDiametre;
+        int iniPosX;
+        int iniPoxY;
+        void initialisation();
+    }
+    
+    class PacmanPainter{
+        int width
+        int height
+    }
+
+    class PacmanGameController{
+        Cmd commandeEnCours
+        keyPressed(keyEvent e)
+        keyReleased(keyEvent e)
+    }
+}
+
+package engine #DarkOrange{
+
+    enum Cmd{
+      LEFT
+      RIGHT
+      UP
+      DOWN
+      IDLE
+    }
+  
+    interface Game{
+        void evolve(Cmd userCmd)
+        boolean isFinished()
+    }
+
+
+    interface GameController{
+        Cmd getCommand()
+    }
+
+    class PacmanGameController{
+        Cmd commandeEnCours
+        keyPressed(keyEvent e)
+        keyReleased(keyEvent e)
+    }
+
+    interface GamePainter{
+        void draw(BufferedImage im
+    }
+
+    
+    class DrawingPanel{
+        BufferedImage nextImage
+        BufferedImage currentImage
+        int width
+        int height
+        void drawGame()
+        paint(graphics g)
+    }
+
+    class GraphicalInterface{
+        void paint()
+    }
+
+    class GameEngineGraphical{
+        void run()
+    }
+    
+    
+
+    PacmanGame -.-|> Game
+    PacmanGameController -.-|> GameController
+    PacmanPainter -.-|> GamePainter
+    PacmanGameController --"1" Cmd
+
+    DrawingPanel --"1" GamePainter
+    GraphicalInterface --"1" DrawingPanel
+
+    GameEngineGraphical --"1" GraphicalInterface
+    GameEngineGraphical --"1" Game
+    GameEngineGraphical --"1" GameController
+    GameEngineGraphical --"1" GamePainter
+}
+
+PacmanGame --"1" PlateauDeJeu
+
+@enduml
