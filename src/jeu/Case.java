@@ -1,10 +1,9 @@
 package jeu;
 
-import java.util.Random;
+import java.awt.*;
 
 public abstract class Case {
 
-    public static final Random random = new Random();
     protected boolean blocking = false; //La case est-elle bloquante ?
     //TODO: Attribut pour la texture ?
     public Case(){}
@@ -12,6 +11,8 @@ public abstract class Case {
     public boolean isBlocking() {
         return blocking;
     }
+
+    public abstract Color getColor();
 
     public void setBlocking(boolean isBlocking) {
         this.blocking = isBlocking;

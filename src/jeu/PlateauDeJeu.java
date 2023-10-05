@@ -5,12 +5,10 @@ import java.util.Iterator;
 
 public class PlateauDeJeu {
 
-    private final int largeur = 20;
-    private final int hauteur = 20;
+    private final int largeur = 16;
+    private final int hauteur = 9;
     private final int nombreDeMonstre = 5;
     private ArrayList<Case> cases;
-
-    private CaseTresor caseTresors;
 
     private ArrayList<Entitee> entitees;
 
@@ -21,7 +19,6 @@ public class PlateauDeJeu {
             this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
             this.entitees = new ArrayList<>();
             this.entiteeMonstres = new ArrayList<>();
-            this.caseTresors = new CaseTresor();
             genererPlateau();
     }
 
@@ -39,22 +36,34 @@ public class PlateauDeJeu {
      */
     public void genererMonstre(){
         initialiserMonstre();
-    }
+    } //supprimer genereMonstre et utililiser initialiserMonstre uniquement ?
 
     /**
-     * Génére les cases trésors
+     * Génération aléatoire d'une case trésor
      */
     public void genererCaseTresor(){
-        //TODO : pas encore d'idée
+        int index = 0;
+        while (cases.get(index).isBlocking()){ //tant que la case est bloquante (mur)
+            index = (int) (Math.random() * cases.size()-1); //on génère un index aléatoire
+        }
+        cases.set(index, new CaseTresor()); //remplace une case chemin par une case trésor
     }
 
     /***
      * Génère le plateau de jeu avec les cases (trésor, mur, etc.)
      */
-    public void genererPlateau() {
+    public void genererPlateau() { //labyrinthe de test, juste une boite
+        for (int i = 0; i < hauteur; i++) {
+            for (int j = 0; j < largeur; j++) {
+                if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) {
+                    this.cases.add(new CaseMur());
+                } else {
+                    this.cases.add(new CaseChemin());
+                }
+            }
+        }
         genererMonstre();
         genererCaseTresor();
-        //TODO: Générer le plateau de jeu
     }
 
     /***
@@ -64,7 +73,33 @@ public class PlateauDeJeu {
      * @return La case aux coordonnées x et y
      */
     public Case getCase(int x, int y) {
-        return cases.get(y + x * largeur);
+        return cases.get(x + y * largeur);
+    }
+
+    /***
+     * Renvoi les cases du plateau de jeu
+     * @return un arraylist de Case
+     */
+    public ArrayList<Case> getCases() {
+        return this.cases;
+    }
+
+    /***
+     * Determine la position x d'une case à partir de son index dans l'arraylist cases
+     * @param index l'index de la case dans l'arraylist cases
+     * @return la position x de la case
+     */
+    public int getXcase(int index) {
+        return index%this.largeur;
+    }
+
+    /***
+     * Determine la position y d'une case à partir de son index dans l'arraylist cases
+     * @param index l'index de la case dans l'arraylist cases
+     * @return la position y de la case
+     */
+    public int getYcase(int index) {
+        return index / this.largeur;
     }
 
     /**
@@ -74,16 +109,4 @@ public class PlateauDeJeu {
     public Iterator<EntiteeMonstre> monstreIterator() {
         return this.entiteeMonstres.iterator();
     }
-
-    /**
-     * @return l'instance du trésor dans le plateau
-     */
-    public int getCaseTresorPositionX(){
-        return this.caseTresors.positionX;
-    }
-
-    public int getCaseTresorPositionY(){
-        return this.caseTresors.positionY;
-    }
-
 }

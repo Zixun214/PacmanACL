@@ -3,9 +3,12 @@ package model;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import engine.GamePainter;
+import jeu.Case;
+import jeu.CaseMur;
 import jeu.EntiteeMonstre;
 
 /**
@@ -54,6 +57,15 @@ public class PacmanPainter implements GamePainter {
 			g2d.drawLine(0, y, width, y);
 		}
 
+		//Dessiner les cases
+		ArrayList<Case> cases = PacmanGame.plateauDeJeu.getCases();
+		for(int i = 0; i < cases.size(); i++){
+			Case casePlateau = cases.get(i);
+			g2d = (Graphics2D) im.getGraphics();
+			g2d.setColor(casePlateau.getColor());
+			g2d.fillRect(PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60, 60, 60); //TODO: 60 est la taille d'une case, il faudrait la mettre en constante ?
+		}
+
 		//Dessiner le personnage
 		Graphics2D crayon = (Graphics2D) im.getGraphics();
 		crayon.setColor(Color.blue);
@@ -66,11 +78,6 @@ public class PacmanPainter implements GamePainter {
 			g2d.setColor(Color.red);
 			g2d.fill(new Ellipse2D.Double(monstre.positionX, monstre.positionY, 10, 10));
 		}
-
-		//Dessiner le trésor
-		g2d = (Graphics2D) im.getGraphics();
-		g2d.setColor(Color.yellow);
-		g2d.fill(new Ellipse2D.Double(PacmanGame.plateauDeJeu.getCaseTresorPositionX(), PacmanGame.plateauDeJeu.getCaseTresorPositionY(), 10, 10));
 
 	}
 
