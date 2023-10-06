@@ -6,7 +6,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+
 import engine.GamePainter;
+import engine.TextManager;
 import jeu.Case;
 import jeu.CaseMur;
 import jeu.EntiteeMonstre;
@@ -25,12 +30,17 @@ public class PacmanPainter implements GamePainter {
 	public static final int WIDTH = 960;
 	public static final int HEIGHT = 540;
 
+	private TextManager scoreDisplay;
+
 	/**
 	 * appelle constructeur parent
 	 * 
 	 * le jeutest a afficher
 	 */
 	public PacmanPainter() {
+		// Initialise TextManager avec un affichage par défaut de score
+		scoreDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
+
 	}
 
 	/**
@@ -78,6 +88,12 @@ public class PacmanPainter implements GamePainter {
 			g2d.setColor(Color.red);
 			g2d.fill(new Ellipse2D.Double(monstre.positionX, monstre.positionY, 10, 10));
 		}
+
+		//Afficher du texte
+		// Màj et dessine le score
+		scoreDisplay.setText("Score: " + "test");
+		scoreDisplay.drawText(g2d, 10, 20);
+
 
 	}
 
