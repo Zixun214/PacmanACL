@@ -1,5 +1,6 @@
 package start;
 
+import engine.TextManagerGL;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -25,6 +26,8 @@ public class StartMenu {
     private boolean startClickable =false;
     private StartButton startButton =new StartButton(
             380,200,200,100);
+
+    private TextManagerGL textManagerGL;
 
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -54,6 +57,7 @@ public class StartMenu {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
+
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -69,7 +73,9 @@ public class StartMenu {
                     (vidmode.height() - pHeight.get(0)) / 2
             );
         } // the stack frame is popped automatically
-//****************
+
+        //****************
+
         //Cursor on button
         glfwSetCursorPosCallback(menuWindow, (window, xpos, ypos) -> {
             if (startButton.isHovered((float)xpos, (float)ypos)) {
@@ -80,6 +86,7 @@ public class StartMenu {
                 startClickable =false;
             }
         });
+
         //Mouse click button
         glfwSetMouseButtonCallback(menuWindow,new GLFWMouseButtonCallback(){
             @Override
@@ -98,9 +105,17 @@ public class StartMenu {
                 }
             }
         });
-//**************
+
+        //**************
+
         // Make the OpenGL context current
         glfwMakeContextCurrent(menuWindow);
+
+        GL.createCapabilities();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        textManagerGL = new TextManagerGL("PacmanACL/ressources/fontTest.png", "PacmanACL/ressources/fontTest.fnt");
+
         // Enable v-sync
         glfwSwapInterval(1);
         // Make the window visible
@@ -108,29 +123,31 @@ public class StartMenu {
     }
 
     private void loop() {
-        GL.createCapabilities();
 
-//set position and projection mode
+        //set position and projection mode
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glOrtho(0, 960, 540, 0, -1, 1);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-//
+
         // Set the clear color
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         // Run until close the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(menuWindow)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-//********************
-            //All update doing here !!!
+
+        //******************** //All update doing here !!!
 
             if (startClickable)
                 startButton.drawButtonWithBorder();
             else
                 startButton.drawButton();
 
-//*******************
+            textManagerGL.renderText("Test Texte", 0, 0); //Rendu du texte
+
+        //*******************
+
             glfwSwapBuffers(menuWindow); // swap the color buffers
             // Poll for window events. The key callback above will only be invoked during this call.
             glfwPollEvents();
