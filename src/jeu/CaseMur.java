@@ -3,7 +3,7 @@ package jeu;
 import java.awt.*;
 
 public class CaseMur extends Case {
-        public CaseMur() {
+    public CaseMur() {
             this.blocking = true;
         }
 

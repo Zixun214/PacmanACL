@@ -5,17 +5,6 @@ package jeu #LightBlue{
     abstract class Entitee
     class EntiteePJ
     abstract class EntiteePNJ
-    class PlateauDeJeu{
-    }
-
-    CaseTresor --|> Case
-    CaseMur --|> Case
-    EntiteeMonstre --|> EntiteePNJ
-    EntiteePNJ --|> Entitee
-    EntiteePJ --|> Entitee
-
-    PlateauDeJeu --"*" Case
-    PlateauDeJeu --"*" Entitee
     
     class PlateauDeJeu{
         int largeur;
@@ -23,25 +12,29 @@ package jeu #LightBlue{
         int nombreDeMonstre;
         void initialiserMonstre();
         void genererMonstre();
-        void genererTresor();
+        void genererCaseTresor();
         void genererPlateau();
         Case getCase(int x, int y);
-        Iterator<EntiteeMonstre> monstreIterator()
-        getCaseTresorPOsitionX();
-        getCaseTresorPOsitionY();
+        ArrayList<Case> getCases();
+        int getXcase(int index);
+        int getYcase(int index);
+        Iterator<EntiteeMonstre> monstreIterator();
     }
     
     abstract class Case{
-       Random random;
        boolean blocking;
        boolean isBlocking();
        void setBlocking(boolean isBlocking);
+       Color getColor();
     }
     
     class CaseTresor{
-      int positionX;
-      int positionY;
-      void initialiserCaseTresor();
+    }
+
+    class CaseMur{
+    }
+
+    class CaseChemin{
     }
     
     class Entitee(){
@@ -53,7 +46,18 @@ package jeu #LightBlue{
         int positionY;
         void initialiserMonstre();
     }
-    
+
+
+    CaseTresor --|> Case
+    CaseMur --|> Case
+    CaseChemin --|> Case
+    EntiteePNJ --|> Entitee
+    EntiteeMonstre --|> EntiteePNJ
+    EntiteePJ --|> Entitee
+
+    PlateauDeJeu --"*" Case
+    PlateauDeJeu --"*" Entitee
+    PlateauDeJeu --"*" EntiteeMonstre
 }
 
 package model #LightGreen{
@@ -125,9 +129,28 @@ package engine #DarkOrange{
     class GameEngineGraphical{
         void run()
     }
-    
-    
 
+    class Character{
+        int posX
+        int posY
+        int speed
+        int direction
+        void move()
+        void draw()
+    }
+
+    class TextManagerGL{
+        int textureId;
+        void renderText(string text,float x,float y);
+        void initializeCharacters(String fontMetadataPath);
+        void parseFntFile(String path);
+        Map<String, String> parseValues(String line);
+        int loadTexture(String path);
+        void cleanup();
+    }
+    
+    
+    TextManagerGL --"*" Character
     PacmanGame -.-|> Game
     PacmanGameController -.-|> GameController
     PacmanPainter -.-|> GamePainter
@@ -143,5 +166,38 @@ package engine #DarkOrange{
 }
 
 PacmanGame --"1" PlateauDeJeu
+
+package start #LightPink{
+    class StartMenu{
+        long menuWindow;
+        boolean startClickable;
+        void run();
+        void init();
+        void loop();
+    }
+
+    class StartButton{
+        foat x;
+        float y;
+        float width;
+        float height;
+        float borderWidth;
+        float borderColor[];
+        float buttonColor[];
+        boolean isIncluded(float mx, float my);
+        void drawButton();
+        boolean isHovered(float mx, float my);
+        void drawButtonWithBorder();
+    }
+
+    class Main{
+        boolean StartGame;
+    }
+
+    StartMenu --"1" StartButton
+    StartMenu --"1" TextManagerGL
+}
+
+
 
 @enduml
