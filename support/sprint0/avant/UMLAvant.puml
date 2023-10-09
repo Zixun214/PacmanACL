@@ -1,0 +1,89 @@
+@startuml
+
+package Jeu #LightBlue{
+    abstract class Case
+    class CaseTresor
+    class CaseMur
+    abstract class Entitee
+    class EntiteePJ
+    abstract class EntiteePNJ
+    class EntiteeMonstre
+    class PlateauDeJeu{
+        ArrayList <Case> cases
+        ArrayList <Entitee> entitees
+    }
+
+    CaseTresor --|> Case
+    CaseMur --|> Case
+    EntiteeMonstre --|> EntiteePNJ
+    EntiteePNJ --|> Entitee
+    EntiteePJ --|> Entitee
+
+    PlateauDeJeu --"*" Case
+    PlateauDeJeu --"*" Entitee
+}
+
+package Graphique #DarkOrange{
+
+    interface Game{
+        void evolve(Cmd userCmd)
+        boolean isFinished()
+    }
+
+    class PacmanGame{
+        int posPacmanX
+        int posPacmanY
+    }
+
+    interface GameController{
+        Cmd getCommand()
+    }
+
+    class PacmanGameController{
+        Cmd commandeEnCours
+        keyPressed(keyEvent e)
+        keyReleased(keyEvent e)
+    }
+
+    interface GamePainter{
+        void draw(BufferedImage im
+    }
+
+    class PacmanPainter{
+        int width
+        int height
+    }
+
+    class DrawingPanel{
+        BufferedImage nextImage
+        BufferedImage currentImage
+        int width
+        int height
+        void drawGame()
+        paint(graphics g)
+    }
+
+    class GraphicalInterface{
+        void paint()
+    }
+
+    class GameEngineGraphical{
+        void run()
+    }
+
+    PacmanGame -.-|> Game
+    PacmanGameController -.-|> GameController
+    PacmanPainter -.-|> GamePainter
+
+    DrawingPanel --"1" GamePainter
+    GraphicalInterface --"1" DrawingPanel
+
+    GameEngineGraphical --"1" GraphicalInterface
+    GameEngineGraphical --"1" Game
+    GameEngineGraphical --"1" GameController
+    GameEngineGraphical --"1" GamePainter
+}
+
+PacmanGame --"1" PlateauDeJeu
+
+@enduml
