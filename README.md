@@ -12,6 +12,7 @@ TAGNON Ludovic<br>
 VILLAUME Lucas<br>
 MARTINI Florent
 ## Organisation du travail
+Dans le branch main, les backlogs sont dans le "support".<br>
 Lien de Trello : 
 https://trello.com/b/VXQ6D2Gc/agile
 ## Technique Utilisé
