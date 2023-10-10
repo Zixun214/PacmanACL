@@ -11,7 +11,9 @@ ZHOU Zixun<br>
 TAGNON Ludovic<br>
 VILLAUME Lucas<br>
 MARTINI Florent
-
+## Organisation du travail
+Lien de Trello : 
+https://trello.com/b/VXQ6D2Gc/agile
 ## Technique Utilisé
 1. Maven : Générer le projet.
 2. LWJGL : Light Weight Java Game Library<br>
