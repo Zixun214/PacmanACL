@@ -56,7 +56,8 @@ public class PlateauDeJeu {
         for (int i = 0; i < hauteur; i++) {
             for (int j = 0; j < largeur; j++) {
                 if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) {
-                    this.cases.add(new CaseMur());
+                    if( (j == 0 && i >= 0 && i < hauteur -1) || (j == largeur -1 && i >= 0 && i < hauteur -1) ) this.cases.add(new CaseMur(true));
+                    else this.cases.add(new CaseMur());
                 } else {
                     this.cases.add(new CaseChemin());
                 }

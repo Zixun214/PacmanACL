@@ -19,9 +19,12 @@ public class PacmanGame implements Game {
 	/**
 	 * position initiale de pacman
 	 */
-	public static final int cercleDiametre = 10;
-	protected static final int iniPosX= 90 - cercleDiametre / 2;
-	protected static final int iniPosY= 90 - cercleDiametre / 2;
+	public static final int cercleDiametre = 60;
+
+	public static int sidePacman = 2; //2 = base, 4 = gauche, 6 = droite, 8 = haut
+
+	protected static final int iniPosX = 90 - cercleDiametre / 2;
+	protected static final int iniPosY = 90 - cercleDiametre / 2;
 
 	public static int posPacmanX;
 	public static int posPacmanY;
@@ -69,16 +72,20 @@ public class PacmanGame implements Game {
 		//System.out.println("Execute " + commande);
 		switch (commande){
 			case UP :
-				if(PacmanGame.posPacmanY - 60 > 60) PacmanGame.posPacmanY-=60;//pour affichage
+				if(PacmanGame.posPacmanY > 60) PacmanGame.posPacmanY-=60;
+				PacmanGame.sidePacman = 8;
 				break;
 			case DOWN:
 				if(PacmanGame.posPacmanY + 60 < 480) PacmanGame.posPacmanY+=60;
+				PacmanGame.sidePacman = 2;
 				break;
 			case LEFT:
-				if(PacmanGame.posPacmanX - 60 > 60) PacmanGame.posPacmanX-=60;
+				if(PacmanGame.posPacmanX > 60) PacmanGame.posPacmanX-=60;
+				PacmanGame.sidePacman = 4;
 				break;
 			case RIGHT:
-				if(PacmanGame.posPacmanX + 60 < 900) PacmanGame.posPacmanX+=60;
+				if(PacmanGame.posPacmanX + 60 < 900)PacmanGame.posPacmanX+=60;
+				PacmanGame.sidePacman = 6;
 				break;
 		}
 	}

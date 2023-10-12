@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,6 +31,8 @@ public class PacmanPainter implements GamePainter {
 
 	private TextManager scoreDisplay;
 
+	private Frame frame;
+
 	/**
 	 * appelle constructeur parent
 	 *
@@ -40,7 +41,7 @@ public class PacmanPainter implements GamePainter {
 	public PacmanPainter() {
 		// Initialise TextManager avec un affichage par défaut de score
 		scoreDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
-
+		this.frame = new Frame("Image Drawing Example");
 	}
 
 	/**
@@ -54,6 +55,8 @@ public class PacmanPainter implements GamePainter {
 		int height = im.getHeight();
 		// Créez un Graphics2D à partir de l'image
 		Graphics2D g2d = (Graphics2D) im.getGraphics();
+		// Création d'un Graphics
+		Graphics g = im.getGraphics();
 		// Définissez la couleur de la grille (par exemple, noir)
 		g2d.setColor(Color.BLACK);
 		// Définissez l'épaisseur de la ligne de la grille
@@ -68,31 +71,53 @@ public class PacmanPainter implements GamePainter {
 		}
 
 		//Dessiner les cases
+		//wallBreakable_small.png
+
 		ArrayList<Case> cases = PacmanGame.plateauDeJeu.getCases();
 		for(int i = 0; i < cases.size(); i++){
+			Image imgC = null;
 			Case casePlateau = cases.get(i);
-			g2d = (Graphics2D) im.getGraphics();
-			g2d.setColor(casePlateau.getColor());
-			g2d.fillRect(PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60, 60, 60); //TODO: 60 est la taille d'une case, il faudrait la mettre en constante ?
+			if(casePlateau.getColor() == Color.RED) {
+				if( ((CaseMur)casePlateau).estMurDeCote() )
+					imgC = Toolkit.getDefaultToolkit().getImage("ressources/wallStone_small.png");
+				else
+					imgC = Toolkit.getDefaultToolkit().getImage("ressources/wallStone_fence.png");
+			}
+			if(casePlateau.getColor() == Color.YELLOW){
+				imgC = Toolkit.getDefaultToolkit().getImage("ressources/barrelBomb0013.png");
+			}
+			if(casePlateau.getColor() == Color.GREEN){
+				imgC = Toolkit.getDefaultToolkit().getImage("ressources/groundEarth_checkered.png");
+			}
+			//g2d = (Graphics2D) im.getGraphics();
+			//g2d.setColor(casePlateau.getColor());
+			g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60 , this.frame);
+			//g2d.fillRect(PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60, 60, 60); //TODO: 60 est la taille d'une case, il faudrait la mettre en constante ?
 		}
 
-		//Dessiner le personnage
-		Graphics2D crayon = (Graphics2D) im.getGraphics();
-		crayon.setColor(Color.blue);
-		crayon.fillOval(PacmanGame.posPacmanX,PacmanGame.posPacmanY,10,10);
+
+		//Dessiner le personnage avec texture
+
+		Image img = null;
+		if(PacmanGame.sidePacman == 4) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkD_0000.png");
+		if(PacmanGame.sidePacman == 6) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkB_0000.png");
+		if(PacmanGame.sidePacman == 8) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkC_0000.png");
+		if(PacmanGame.sidePacman == 2) img =Toolkit.getDefaultToolkit().getImage("ressources/hero_walkA_0000.png");
+		g.drawImage(img, PacmanGame.posPacmanX,PacmanGame.posPacmanY, this.frame);
+
 
 		//Dessiner les monstres
 		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
 			EntiteeMonstre monstre = it.next();
-			g2d = (Graphics2D) im.getGraphics();
-			g2d.setColor(Color.red);
-			g2d.fill(new Ellipse2D.Double(monstre.positionX, monstre.positionY, 10, 10));
+			Image imgM = Toolkit.getDefaultToolkit().getImage("ressources/enemy_walkA_0000.png");
+			g.drawImage(imgM, monstre.positionX,monstre.positionY, this.frame);
 		}
 
 		//Afficher du texte
 		// Màj et dessine le score
 		scoreDisplay.setText("Score: " + "test");
 		scoreDisplay.drawText(g2d, 10, 20);
+
 
 
 	}
