@@ -28,7 +28,7 @@ public class Main {
 
 	public static void runGame() throws InterruptedException {
 		// creation du main.java.jeu particulier et de son afficheur
-		PacmanGame game = new PacmanGame("helpFilePacman.txt");
+		PacmanGame game = new PacmanGame("ressources/GameHelper.txt");
 		PacmanPainter painter = new PacmanPainter();
 		PacmanController controller = new PacmanController();
 

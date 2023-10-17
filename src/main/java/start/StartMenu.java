@@ -4,6 +4,7 @@ import engine.TextManagerGL;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.*;
 
 import java.nio.*;
@@ -23,14 +24,15 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class StartMenu {
 
     private long menuWindow;
+    private int bgTextureID;
     private boolean startClickable =false;
     private StartButton startButton =new StartButton(
-            380,200,200,100);
+            380,200,200,50);
 
     private TextManagerGL textManagerGL;
 
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+        //System.out.println("Hello LWJGL " + Version.getVersion() + "!");
         init();
         loop();
         // Free the window callbacks and destroy the window
@@ -122,6 +124,51 @@ public class StartMenu {
         glfwShowWindow(menuWindow);
     }
 
+
+    public void loadBgTexture(String imagePath) {
+        IntBuffer w = BufferUtils.createIntBuffer(1);
+        IntBuffer h = BufferUtils.createIntBuffer(1);
+        IntBuffer comp = BufferUtils.createIntBuffer(1);
+
+        //STBImage.stbi_set_flip_vertically_on_load(true);
+        ByteBuffer image = STBImage.stbi_load(imagePath, w, h, comp, 4);
+        if (image == null) {
+            throw new RuntimeException("Failed to load a texture file!"
+                    + System.lineSeparator() + STBImage.stbi_failure_reason());
+        }
+        bgTextureID = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, bgTextureID);
+
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, w.get(), h.get(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+
+        STBImage.stbi_image_free(image);
+    }
+    private void drawBackground() {
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, bgTextureID);
+
+        GL11.glBegin(GL11.GL_QUADS);
+
+        GL11.glTexCoord2f(0, 0);
+        GL11.glVertex2f(0, 0);
+
+        GL11.glTexCoord2f(1, 0);
+        GL11.glVertex2f(960, 0);
+
+        GL11.glTexCoord2f(1, 1);
+        GL11.glVertex2f(960, 540);
+
+        GL11.glTexCoord2f(0, 1);
+        GL11.glVertex2f(0, 540);
+
+        GL11.glEnd();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+    }
+
+
     private void loop() {
 
         //set position and projection mode
@@ -131,20 +178,30 @@ public class StartMenu {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        // Set the clear color
-        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+        loadBgTexture("ressources/jeuBg.jpg");
+
         // Run until close the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(menuWindow)) {
+            // Set the clear color
+            glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             //******************** //All update doing here !!!
 
-            if (startClickable)
-                startButton.drawButtonWithBorder();
-            else
-                startButton.drawButton();
+            GL11.glColor3f(1.0f, 1.0f, 1.0f);// Use initial color
+            drawBackground();
 
-            textManagerGL.renderText("Test Texte", 0, 0); //Rendu du texte
+            if (startClickable){
+                startButton.drawButtonWithBorder();
+                GL11.glColor3f(1.0f, 0, 1.0f);
+                textManagerGL.renderText("Start Game", 380, 200); //Rendu du texte
+            }
+            else {
+                startButton.drawButton();
+                GL11.glColor3f(1.0f, 1.0f, 1.0f);
+                textManagerGL.renderText("Start Game", 380, 200); //Rendu du texte
+            }
+
 
             //*******************
 
