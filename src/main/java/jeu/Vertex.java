@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Vertex {
 
-    private int id;
+    private String id;
     private ArrayList<Vertex> neighbors; //voisins
     private ArrayList<Vertex> path; //chemin vers les vertexs
     private boolean visited;
 
-    public Vertex(int coord){
+    public Vertex(String coord){
         this.id = coord;
         this.neighbors = new ArrayList<Vertex>(4);
         this.path = new ArrayList<Vertex>();
@@ -40,7 +40,7 @@ public class Vertex {
         return this.path;
     }
 
-    public int getId(){
+    public String getId(){
         return this.id;
     }
 
@@ -49,6 +49,6 @@ public class Vertex {
     }
 
     public boolean equals(Vertex v) {
-        return this.id == v.getId();
+        return this.id.equals(v.getId());
     }
 }
