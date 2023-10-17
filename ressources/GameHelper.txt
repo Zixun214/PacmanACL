@@ -1,0 +1,5 @@
+Press key below to move :
+"z" to go up
+"s" to go down
+"q" to go left
+"d" to go right
