@@ -3,6 +3,10 @@ package start;
 import engine.TextManagerGL;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.*;
@@ -25,7 +29,10 @@ public class StartMenu {
 
     private long menuWindow;
     private int bgTextureID;
+    private SoundLoaderGL bgSoundLoader,butSonLoader;
+    private long device, context;
     private boolean startClickable =false;
+    private boolean firstTimePlay = true;
     private StartButton startButton =new StartButton(
             380,200,200,50);
 
@@ -35,6 +42,7 @@ public class StartMenu {
         //System.out.println("Hello LWJGL " + Version.getVersion() + "!");
         init();
         loop();
+        cleanupOpenAL();
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(menuWindow);
         glfwDestroyWindow(menuWindow);
@@ -50,8 +58,9 @@ public class StartMenu {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
+        initOpenAL();
         // Create the window
-        menuWindow = glfwCreateWindow(960, 540, "Start Menu", NULL, NULL);
+        menuWindow = glfwCreateWindow(960, 540, "Game Launcher", NULL, NULL);
         if (menuWindow == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
@@ -59,7 +68,6 @@ public class StartMenu {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
-
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -77,18 +85,16 @@ public class StartMenu {
         } // the stack frame is popped automatically
 
         //****************
-
         //Cursor on button
         glfwSetCursorPosCallback(menuWindow, (window, xpos, ypos) -> {
             if (startButton.isHovered((float)xpos, (float)ypos)) {
                 // Change the appearance of the button to indicate it is clickable
-                startClickable =true;
+                startClickable = true;
             } else {
                 // Change the appearance of the button back to normal
-                startClickable =false;
+                startClickable = false;
             }
         });
-
         //Mouse click button
         glfwSetMouseButtonCallback(menuWindow,new GLFWMouseButtonCallback(){
             @Override
@@ -107,9 +113,7 @@ public class StartMenu {
                 }
             }
         });
-
         //**************
-
         // Make the OpenGL context current
         glfwMakeContextCurrent(menuWindow);
 
@@ -124,6 +128,27 @@ public class StartMenu {
         glfwShowWindow(menuWindow);
     }
 
+    private void initOpenAL() {
+        device = ALC10.alcOpenDevice((ByteBuffer) null);
+        if (device == MemoryUtil.NULL) {
+            throw new IllegalStateException("Failed to open the default device.");
+        }
+        ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+        if (!deviceCaps.OpenALC10) {
+            throw new IllegalStateException("OpenAL 1.0 not supported on device.");
+        }
+        context = ALC10.alcCreateContext(device, (IntBuffer) null);
+        if (context == MemoryUtil.NULL) {
+            throw new IllegalStateException("Failed to create an OpenAL context.");
+        }
+        ALC10.alcMakeContextCurrent(context);
+        AL.createCapabilities(deviceCaps);
+    }
+
+    private void cleanupOpenAL() {
+        ALC10.alcCloseDevice(device);
+        ALC10.alcDestroyContext(context);
+    }
 
     public void loadBgTexture(String imagePath) {
         IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -179,6 +204,9 @@ public class StartMenu {
         glLoadIdentity();
 
         loadBgTexture("ressources/jeuBg.jpg");
+        bgSoundLoader = new SoundLoaderGL("ressources/MenuBGM.wav");
+        bgSoundLoader.play();
+        butSonLoader = new SoundLoaderGL("ressources/buttonSound.wav");
 
         // Run until close the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(menuWindow)) {
@@ -192,11 +220,26 @@ public class StartMenu {
             drawBackground();
 
             if (startClickable){
+                if (firstTimePlay && !butSonLoader.isPlaying()){
+                    butSonLoader.play();
+                    firstTimePlay = false;
+                    /*  Use this to control sound's play time if need
+                    new java.util.Timer().schedule(new java.util.TimerTask(){
+                        @Override
+                        public void run() {
+                            butSonLoader.stop();
+                        }
+                    }, 100);
+                     */
+                }
+
                 startButton.drawButtonWithBorder();
                 GL11.glColor3f(1.0f, 0, 1.0f);
                 textManagerGL.renderText("Start Game", 380, 200); //Rendu du texte
             }
             else {
+                butSonLoader.stop();
+                firstTimePlay = true;
                 startButton.drawButton();
                 GL11.glColor3f(1.0f, 1.0f, 1.0f);
                 textManagerGL.renderText("Start Game", 380, 200); //Rendu du texte
@@ -209,5 +252,7 @@ public class StartMenu {
             // Poll for window events. The key callback above will only be invoked during this call.
             glfwPollEvents();
         }
+        butSonLoader.cleanup();
+        bgSoundLoader.cleanup();
     }
 }
