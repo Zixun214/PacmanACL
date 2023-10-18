@@ -2,6 +2,8 @@ package model;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,6 +16,8 @@ import engine.TextManager;
 import jeu.Case;
 import jeu.CaseMur;
 import jeu.EntiteeMonstre;
+
+import javax.imageio.ImageIO;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -33,6 +37,10 @@ public class PacmanPainter implements GamePainter {
 
 	private Frame frame;
 
+	private int frameIndex;
+
+	private int animationSpeed = 100;
+
 	/**
 	 * appelle constructeur parent
 	 *
@@ -42,6 +50,7 @@ public class PacmanPainter implements GamePainter {
 		// Initialise TextManager avec un affichage par défaut de score
 		scoreDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
 		this.frame = new Frame("Image Drawing Example");
+		this.frameIndex = 0;
 	}
 
 	/**
@@ -96,13 +105,39 @@ public class PacmanPainter implements GamePainter {
 		}
 
 
-		//Dessiner le personnage avec texture
-
-		Image img = null;
+		//Dessiner le personnage avec textures et animations
+		BufferedImage[] pacmanAnimation = new BufferedImage[17];
+		try {
+			String side = "";
+			switch (PacmanGame.sidePacman){
+				case (4) : side = "D";
+						break;
+				case (2) : side = "A";
+					break;
+				case (6) : side = "B";
+					break;
+				case (8) : side = "C";
+					break;
+				default:
+					break;
+			}
+			for(int i = 0; i < 17; i++){
+				if(i < 10)
+					pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side +"_000" + i +".png"));
+				else
+					pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk"+ side +"_00" + i +".png"));
+			}
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		/*
 		if(PacmanGame.sidePacman == 4) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkD_0000.png");
 		if(PacmanGame.sidePacman == 6) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkB_0000.png");
 		if(PacmanGame.sidePacman == 8) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkC_0000.png");
 		if(PacmanGame.sidePacman == 2) img =Toolkit.getDefaultToolkit().getImage("ressources/hero_walkA_0000.png");
+		 */
+		this.frameIndex = (this.frameIndex + 1) % 17;
+		Image img = pacmanAnimation[frameIndex];
 		g.drawImage(img, PacmanGame.posPacmanX,PacmanGame.posPacmanY, this.frame);
 
 

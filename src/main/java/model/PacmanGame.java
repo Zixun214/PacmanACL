@@ -29,6 +29,7 @@ public class PacmanGame implements Game {
 	public static int posPacmanX;
 	public static int posPacmanY;
 
+	public static final int pas = 10;
 	/**
 	 * le plateau de jeu
 	 */
@@ -72,19 +73,19 @@ public class PacmanGame implements Game {
 		//System.out.println("Execute " + commande);
 		switch (commande){
 			case UP :
-				if(PacmanGame.posPacmanY > 60) PacmanGame.posPacmanY-=60;
+				if(PacmanGame.posPacmanY > 60) PacmanGame.posPacmanY-=pas;
 				PacmanGame.sidePacman = 8;
 				break;
 			case DOWN:
-				if(PacmanGame.posPacmanY + 60 < 480) PacmanGame.posPacmanY+=60;
+				if(PacmanGame.posPacmanY + 60 < 480) PacmanGame.posPacmanY+=pas;
 				PacmanGame.sidePacman = 2;
 				break;
 			case LEFT:
-				if(PacmanGame.posPacmanX > 60) PacmanGame.posPacmanX-=60;
+				if(PacmanGame.posPacmanX > 60) PacmanGame.posPacmanX-=pas;
 				PacmanGame.sidePacman = 4;
 				break;
 			case RIGHT:
-				if(PacmanGame.posPacmanX + 60 < 900)PacmanGame.posPacmanX+=60;
+				if(PacmanGame.posPacmanX + 60 < 900)PacmanGame.posPacmanX+=pas;
 				PacmanGame.sidePacman = 6;
 				break;
 		}
