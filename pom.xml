@@ -65,6 +65,8 @@
                                     <includes>
                                         <include>*.png</include> <!-- Inclure les fichiers .png -->
                                         <include>*.fnt</include> <!-- Inclure les fichiers .fnt -->
+                                        <include>*.jpg</include>
+                                        <include>*.wav</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -121,6 +123,17 @@
             <artifactId>lwjgl-opengl</artifactId>
             <version>3.3.3</version>
             <classifier>natives-linux</classifier> <!-- same as before -->
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-openal</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-openal</artifactId>
+            <version>3.3.3</version>
+            <classifier>natives-linux</classifier>
         </dependency>
 
 
