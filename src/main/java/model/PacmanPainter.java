@@ -30,14 +30,18 @@ public class PacmanPainter implements GamePainter {
 	/**
 	 * la taille des cases
 	 */
-	public static final int WIDTH = 960;
+	public static final int WIDTH = 960; //peut être modifier dynamiquement
 	public static final int HEIGHT = 540;
+
+	public static final int SCALEWIDTH = WIDTH / 16;
+	public static final int SCALEHEIGHT = HEIGHT / 9;
 
 	private TextManager scoreDisplay;
 
 	private Frame frame;
 
 	private int frameIndex;
+	private int frameIndexMonster;
 
 	private int animationSpeed = 100;
 
@@ -51,6 +55,7 @@ public class PacmanPainter implements GamePainter {
 		scoreDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
 		this.frame = new Frame("Image Drawing Example");
 		this.frameIndex = 0;
+		this.frameIndexMonster = 0;
 	}
 
 	/**
@@ -71,11 +76,11 @@ public class PacmanPainter implements GamePainter {
 		// Définissez l'épaisseur de la ligne de la grille
 		g2d.setStroke(new BasicStroke(1)); // Épaisseur de 1 pixel
 		// Dessinez les lignes verticales de la grille
-		for (int x = 0; x < width; x += 60) {
+		for (int x = 0; x < width; x += SCALEWIDTH) {
 			g2d.drawLine(x, 0, x, height);
 		}
 		// Dessinez les lignes horizontales de la grille
-		for (int y = 0; y < height; y += 60) {
+		for (int y = 0; y < height; y += SCALEHEIGHT) {
 			g2d.drawLine(0, y, width, y);
 		}
 
@@ -98,63 +103,63 @@ public class PacmanPainter implements GamePainter {
 			if(casePlateau.getColor() == Color.GREEN){
 				imgC = Toolkit.getDefaultToolkit().getImage("ressources/groundEarth_checkered.png");
 			}
-			//g2d = (Graphics2D) im.getGraphics();
-			//g2d.setColor(casePlateau.getColor());
-			g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60 , this.frame);
-			//g2d.fillRect(PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60, 60, 60); //TODO: 60 est la taille d'une case, il faudrait la mettre en constante ?
+			g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*SCALEWIDTH, PacmanGame.plateauDeJeu.getYcase(i)*SCALEHEIGHT , this.frame);
 		}
 
 
 		//Dessiner le personnage avec textures et animations
 		BufferedImage[] pacmanAnimation = new BufferedImage[17];
+		BufferedImage[] monsterAnimation = new BufferedImage[13];
 		try {
 			String side = "";
 			switch (PacmanGame.sidePacman){
-				case (4) : side = "D";
-						break;
-				case (2) : side = "A";
-					break;
-				case (6) : side = "B";
-					break;
-				case (8) : side = "C";
-					break;
-				default:
-					break;
+				case (4) : side = "D"; break;
+				case (2) : side = "A"; break;
+				case (6) : side = "B"; break;
+				case (8) : side = "C"; break;
+				case (0) : side = "E";  break;
+				default: break;
 			}
-			for(int i = 0; i < 17; i++){
-				if(i < 10)
-					pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side +"_000" + i +".png"));
-				else
-					pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk"+ side +"_00" + i +".png"));
+			for(int i = 0; i < 17; i++) {
+				if (PacmanGame.sidePacman == 0) {
+					if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_000" + i + ".png"));
+					else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_00" + i + ".png"));
+				} else {
+					if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_000" + i + ".png"));
+					else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_00" + i + ".png"));
+				}
+			}
+			for(int i = 0; i< 13; i++){
+				if (i < 10) monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_000" + i + ".png"));
+				else monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_00" + i + ".png"));
 			}
 		}catch (IOException e){
 			e.printStackTrace();
 		}
-		/*
-		if(PacmanGame.sidePacman == 4) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkD_0000.png");
-		if(PacmanGame.sidePacman == 6) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkB_0000.png");
-		if(PacmanGame.sidePacman == 8) img = Toolkit.getDefaultToolkit().getImage("ressources/hero_walkC_0000.png");
-		if(PacmanGame.sidePacman == 2) img =Toolkit.getDefaultToolkit().getImage("ressources/hero_walkA_0000.png");
-		 */
+
 		this.frameIndex = (this.frameIndex + 1) % 17;
 		Image img = pacmanAnimation[frameIndex];
-		g.drawImage(img, PacmanGame.posPacmanX,PacmanGame.posPacmanY, this.frame);
+		g.drawImage(img, PacmanGame.posPacmanX,PacmanGame.posPacmanY,SCALEWIDTH, SCALEHEIGHT, this.frame);
 
 
 		//Dessiner les monstres
+		this.frameIndexMonster = (this.frameIndexMonster + 1) % 13;
+		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
+			EntiteeMonstre monstre = it.next();
+			Image imgM = monsterAnimation[frameIndexMonster];
+			g.drawImage(imgM, monstre.positionX, monstre.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
+		}
+		/*
 		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
 			EntiteeMonstre monstre = it.next();
 			Image imgM = Toolkit.getDefaultToolkit().getImage("ressources/enemy_walkA_0000.png");
-			g.drawImage(imgM, monstre.positionX,monstre.positionY, this.frame);
-		}
+			g.drawImage(imgM, monstre.positionX,monstre.positionY,SCALEWIDTH, SCALEHEIGHT, this.frame);
+		 */
 
 		//Afficher du texte
 		// Màj et dessine le score
 		scoreDisplay.setText("Score: " + "test");
 		scoreDisplay.drawText(g2d, 10, 20);
-
-
-
 	}
 
 	@Override

@@ -68,24 +68,26 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public void evolve(Cmd commande) {
-		if(commande == Cmd.IDLE)
+		if(commande == Cmd.IDLE || commande == null) {
+			PacmanGame.sidePacman = 0;
 			return;
+		}
 		//System.out.println("Execute " + commande);
 		switch (commande){
 			case UP :
-				if(PacmanGame.posPacmanY > 60) PacmanGame.posPacmanY-=pas;
+				if(PacmanGame.posPacmanY > PacmanPainter.SCALEHEIGHT) PacmanGame.posPacmanY-=pas;
 				PacmanGame.sidePacman = 8;
 				break;
 			case DOWN:
-				if(PacmanGame.posPacmanY + 60 < 480) PacmanGame.posPacmanY+=pas;
+				if(PacmanGame.posPacmanY + PacmanPainter.SCALEHEIGHT < PacmanPainter.HEIGHT - PacmanPainter.SCALEHEIGHT) PacmanGame.posPacmanY+=pas;
 				PacmanGame.sidePacman = 2;
 				break;
 			case LEFT:
-				if(PacmanGame.posPacmanX > 60) PacmanGame.posPacmanX-=pas;
+				if(PacmanGame.posPacmanX > PacmanPainter.SCALEWIDTH) PacmanGame.posPacmanX-=pas;
 				PacmanGame.sidePacman = 4;
 				break;
 			case RIGHT:
-				if(PacmanGame.posPacmanX + 60 < 900)PacmanGame.posPacmanX+=pas;
+				if(PacmanGame.posPacmanX + PacmanPainter.SCALEWIDTH < PacmanPainter.WIDTH - PacmanPainter.SCALEWIDTH)PacmanGame.posPacmanX+=pas;
 				PacmanGame.sidePacman = 6;
 				break;
 		}

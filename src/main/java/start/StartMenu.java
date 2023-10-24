@@ -4,6 +4,7 @@ import engine.TextManagerGL;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.openal.AL;
+import org.lwjgl.opengl.*;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
