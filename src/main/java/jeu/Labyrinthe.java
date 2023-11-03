@@ -23,7 +23,7 @@ public class Labyrinthe {
         visited.add(this.labyrinthe[0][0]);
 
         while (!visited.isEmpty()){
-            current = visited.get(-1);
+            current = visited.get(visited.size()-1);
             current.setVisited(true);
             next = choisirVoisin(current, rand);
             if (next != null){
@@ -44,6 +44,33 @@ public class Labyrinthe {
     public void creerLabyrinthe(int seed){
         Random rand = new Random(seed);
         create(rand);
+    }
+
+    public Case getCase(int i, int j) throws ArrayIndexOutOfBoundsException{
+        try {
+            if (i % 2 == 0 && j % 2 == 0) { //Vertex donc chemin
+                return new CaseChemin();
+            } else if (i % 2 == 1 && j % 2 == 1) { //"trou" du graphe
+                return new CaseMur();
+            } else { //i et j pas la même parité
+                if (i % 2 == 0) { // i pair et j impair => chemin horizontal
+                    if (this.labyrinthe[i / 2][(j / 2) + 1].hasPath(this.labyrinthe[i / 2][j / 2])) { //Existance d'un chemin entre j-1 et j+1
+                        return new CaseChemin();
+                    } else {
+                        //System.out.println(this.labyrinthe[i][j-1].getId() + " -> " + this.labyrinthe[i][j+1].getId() + " : " + this.labyrinthe[i][j-1].hasPath(this.labyrinthe[i][j+1]));
+                        return new CaseMur();
+                    }
+                } else { // i impair et j pair => chemin vertical
+                    if (this.labyrinthe[(i / 2) + 1][j / 2].hasPath(this.labyrinthe[i / 2][j / 2])) { //Existance d'un chemin entre i-1 et i+1
+                        return new CaseChemin();
+                    } else {
+                        return new CaseMur();
+                    }
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e){
+            throw new ArrayIndexOutOfBoundsException("i = " + i + " j = " + j);
+        }
     }
 
     private void init(){

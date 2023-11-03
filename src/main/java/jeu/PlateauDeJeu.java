@@ -27,7 +27,7 @@ public class PlateauDeJeu {
      */
     public void initialiserMonstre(){
         for(int i = 0; i< nombreDeMonstre; i++){
-            this.entiteeMonstres.add(new EntiteeMonstre());
+            this.entiteeMonstres.add(new EntiteeMonstre(this));
         }
     }
 
@@ -53,16 +53,23 @@ public class PlateauDeJeu {
      * Génère le plateau de jeu avec les cases (trésor, mur, etc.)
      */
     public void genererPlateau() { //labyrinthe de test, juste une boite
+        Labyrinthe lab = new Labyrinthe(4, 7); //créer un labyrinthe de la taille du plateau de jeu sans les murs extérieurs
+        lab.creerLabyrinthe();
         for (int i = 0; i < hauteur; i++) {
             for (int j = 0; j < largeur; j++) {
-                if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) {
+                if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) { //mur extérieur
                     if( (j == 0 && i >= 0 && i < hauteur -1) || (j == largeur -1 && i >= 0 && i < hauteur -1) ) this.cases.add(new CaseMur(true));
                     else this.cases.add(new CaseMur());
                 } else {
-                    this.cases.add(new CaseChemin());
+                    try {
+                        this.cases.add(lab.getCase(i-1,j-1));
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        this.cases.add(new CaseMur());
+                    }
                 }
             }
         }
+
         genererMonstre();
         genererCaseTresor();
     }
