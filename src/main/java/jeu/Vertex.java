@@ -40,6 +40,15 @@ public class Vertex {
         return this.path;
     }
 
+    public boolean hasPath(Vertex target){
+        for (Vertex chemin : path){
+            if (chemin.equals(target)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getId(){
         return this.id;
     }
