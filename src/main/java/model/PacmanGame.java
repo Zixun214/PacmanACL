@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -74,20 +75,35 @@ public class PacmanGame implements Game {
 		}
 		//System.out.println("Execute " + commande);
 		switch (commande){
+			//2 conditions pour déterminer le mur
+			//1er pour savoir le centre de case (Si pas de condition 2, il y des bugs)
+			//2ème pour assurer que la peronnage marche au centre de case(soit x, soit y)
 			case UP :
-				if(PacmanGame.posPacmanY > PacmanPainter.SCALEHEIGHT) PacmanGame.posPacmanY-=pas;
+				if(PacmanGame.plateauDeJeu.getCase(PacmanGame.posPacmanX/60,(PacmanGame.posPacmanY-pas)/60).getColor() != Color.RED && PacmanGame.posPacmanX%60 == 0)
+				{
+					if(PacmanGame.posPacmanY > PacmanPainter.SCALEHEIGHT) PacmanGame.posPacmanY-=pas;
+				}
 				PacmanGame.sidePacman = 8;
 				break;
 			case DOWN:
-				if(PacmanGame.posPacmanY + PacmanPainter.SCALEHEIGHT < PacmanPainter.HEIGHT - PacmanPainter.SCALEHEIGHT) PacmanGame.posPacmanY+=pas;
+				if(PacmanGame.plateauDeJeu.getCase(PacmanGame.posPacmanX/60,(PacmanGame.posPacmanY+60)/60).getColor() != Color.RED && PacmanGame.posPacmanX%60 == 0)
+				{
+					if(PacmanGame.posPacmanY + PacmanPainter.SCALEHEIGHT < PacmanPainter.HEIGHT - PacmanPainter.SCALEHEIGHT) PacmanGame.posPacmanY+=pas;
+				}
 				PacmanGame.sidePacman = 2;
 				break;
 			case LEFT:
-				if(PacmanGame.posPacmanX > PacmanPainter.SCALEWIDTH) PacmanGame.posPacmanX-=pas;
+				if(PacmanGame.plateauDeJeu.getCase((PacmanGame.posPacmanX-pas)/60,(PacmanGame.posPacmanY)/60).getColor() != Color.RED && PacmanGame.posPacmanY%60 == 0)
+				{
+					if(PacmanGame.posPacmanX > PacmanPainter.SCALEWIDTH) PacmanGame.posPacmanX-=pas;
+				}
 				PacmanGame.sidePacman = 4;
 				break;
 			case RIGHT:
-				if(PacmanGame.posPacmanX + PacmanPainter.SCALEWIDTH < PacmanPainter.WIDTH - PacmanPainter.SCALEWIDTH)PacmanGame.posPacmanX+=pas;
+				if(PacmanGame.plateauDeJeu.getCase((PacmanGame.posPacmanX+60)/60,(PacmanGame.posPacmanY)/60).getColor() != Color.RED && PacmanGame.posPacmanY%60 == 0)
+				{
+					if(PacmanGame.posPacmanX + PacmanPainter.SCALEWIDTH < PacmanPainter.WIDTH - PacmanPainter.SCALEWIDTH)PacmanGame.posPacmanX+=pas;
+				}
 				PacmanGame.sidePacman = 6;
 				break;
 		}
