@@ -67,6 +67,7 @@
                                         <include>*.fnt</include> <!-- Inclure les fichiers .fnt -->
                                         <include>*.jpg</include>
                                         <include>*.wav</include>
+                                        <include>*.txt</include>
                                     </includes>
                                 </resource>
                             </resources>
