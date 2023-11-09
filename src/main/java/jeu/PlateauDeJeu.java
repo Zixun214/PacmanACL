@@ -74,6 +74,14 @@ public class PlateauDeJeu {
         genererCaseTresor();
     }
 
+    public boolean isMurDessous(int x, int y){
+        try {
+            return this.getCase(x,y+1).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
     /***
      * Retourne la case aux coordonnées x et y
      * @param x Coordonnée x
