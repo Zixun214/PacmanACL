@@ -130,4 +130,12 @@ public class PlateauDeJeu {
     public Iterator<EntiteeMonstre> monstreIterator() {
         return this.entiteeMonstres.iterator();
     }
+
+    public int getLargeur() {
+        return largeur;
+    }
+
+    public int getHauteur() {
+        return hauteur;
+    }
 }
