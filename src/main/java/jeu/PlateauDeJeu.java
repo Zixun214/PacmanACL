@@ -24,6 +24,7 @@ public class PlateauDeJeu {
         this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
         this.entitees = new ArrayList<>();
         this.entiteeMonstres = new ArrayList<>();
+        System.out.println("Seed: " + randomSeed);
         genererPlateau(randomSeed);
     }
 
