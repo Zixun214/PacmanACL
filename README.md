@@ -52,8 +52,11 @@ mvn package
 
 Un répertoire "target" va être crée.<br>
 Allez dans le "target".<br>
-Commande Utilisé : 
+Commande Utilisé : (Windows and Linux)
 ```bash
 Java -jar JeuTemplate-1.0-SNAPSHOT.jar
 ```
-
+Commande Utilisé : (Macos)
+```bash
+Java -XstartOnFirstThread -jar JeuTemplate-1.0-SNAPSHOT.jar
+```
