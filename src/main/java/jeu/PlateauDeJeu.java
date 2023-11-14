@@ -2,6 +2,7 @@ package jeu;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class PlateauDeJeu {
 
@@ -16,10 +17,14 @@ public class PlateauDeJeu {
 
 
     public PlateauDeJeu() {
+        this(new Random().nextInt());
+    }
+
+    public PlateauDeJeu(int randomSeed) {
         this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
         this.entitees = new ArrayList<>();
         this.entiteeMonstres = new ArrayList<>();
-        genererPlateau();
+        genererPlateau(randomSeed);
     }
 
     /**
@@ -52,9 +57,9 @@ public class PlateauDeJeu {
     /***
      * Génère le plateau de jeu avec les cases (trésor, mur, etc.)
      */
-    public void genererPlateau() { //labyrinthe de test, juste une boite
+    public void genererPlateau(int randomSeed) { //labyrinthe de test, juste une boite
         Labyrinthe lab = new Labyrinthe(4, 7); //créer un labyrinthe de la taille du plateau de jeu sans les murs extérieurs
-        lab.creerLabyrinthe();
+        lab.creerLabyrinthe(randomSeed);
         for (int i = 0; i < hauteur; i++) {
             for (int j = 0; j < largeur; j++) {
                 if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) { //mur extérieur
