@@ -14,7 +14,9 @@ MARTINI Florent
 ## Organisation du travail
 Dans le branch main, les backlogs sont dans le "support".<br>
 Lien de Trello : 
-https://trello.com/b/VXQ6D2Gc/agile
+https://trello.com/b/VXQ6D2Gc/agile <br>
+Google Drive du projet :
+https://drive.google.com/drive/folders/1CuMOIeEovxx8zTQlSEQoWMFc3sZzKdx7?usp=drive_link
 ## Technique Utilisé
 1. Maven : Générer le projet.
 2. LWJGL : Light Weight Java Game Library<br>
