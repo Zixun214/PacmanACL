@@ -76,6 +76,16 @@ public class PlateauDeJeu {
             }
         }
 
+        //Modification apparence des murs
+        for(int i = 0; i < hauteur; i++){
+            for(int j = 0; j < largeur; j++ ){
+                if(this.getCase(j,i) instanceof CaseMur) {
+                    if (isMurDessous(j, i)) ((CaseMur)this.getCase(j,i)).setMurDeCote(true);
+                    else ((CaseMur)this.getCase(j,i)).setMurDeCote(false);
+                }
+            }
+        }
+
         genererMonstre();
         genererCaseTresor();
     }
