@@ -48,6 +48,7 @@ public class PacmanPainter implements GamePainter {
 	private int timerCollision = 0;
 	private int timerCollisionMAXVALUE = 10; //environ 1 seconde d'animation
 
+
 	/**
 	 * appelle constructeur parent
 	 *
@@ -145,8 +146,8 @@ public class PacmanPainter implements GamePainter {
 			}
 
 			for(int i = 0; i< 13; i++){
-				if (i < 10) monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_000" + i + ".png"));
-				else monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_00" + i + ".png"));
+				if (i < 10) monsterAnimation[i] = ImageIO.read(new File("ressources/enemy02_walkA_000" + i + ".png"));
+				else monsterAnimation[i] = ImageIO.read(new File("ressources/enemy02_walkA_00" + i + ".png"));
 			}
 
 			for(int i = 1; i < 17; i++){
@@ -178,7 +179,7 @@ public class PacmanPainter implements GamePainter {
 
 		//Afficher du texte
 		// Màj et dessine le score
-		scoreDisplay.setText("Score: " + 0);
+		scoreDisplay.setText("Score: " +  PacmanGame.score);
 		scoreDisplay.drawText(g2d, 10, 20);
 
 	}

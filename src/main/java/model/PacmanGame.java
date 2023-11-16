@@ -44,6 +44,9 @@ public class PacmanGame implements Game {
 
 	public static int lastButtonPressed = 0;
 
+	public static int score = 0;
+
+
 	/**
 	 * constructeur avec fichier source pour le help
 	 */
@@ -67,6 +70,7 @@ public class PacmanGame implements Game {
 	public void initialisation() {
 		this.posPacmanX = iniPosX;
 		this.posPacmanY = iniPosY;
+
 	}
 
 	/**
@@ -117,6 +121,7 @@ public class PacmanGame implements Game {
 				break;
 			case SPACE:
 				fire();
+				collisionBombeMonstre();
 				break;
 		}
 		collisionJoueurMonstre();
@@ -141,8 +146,24 @@ public class PacmanGame implements Game {
 			if ((monstre.positionX + cercleDiametreReel >= posPacmanX) && (monstre.positionX - cercleDiametreReel <= posPacmanX)
 					&& ((monstre.positionY + cercleDiametreReel >= posPacmanY) && (monstre.positionY - cercleDiametreReel <= posPacmanY))) {
 				PacmanGame.isHit = 1;
-				//Le dernier bouton appuyer avant la collision
-				System.out.println(PacmanGame.lastButtonPressed);
+			}
+		}
+	}
+
+	/**
+	 * Detecte collision bombe et monstre
+	 * Fait disparaître le monstre si collision
+	 */
+	public void collisionBombeMonstre(){
+		int cercleDiametreReel = cercleDiametre / 2;
+		int Xbombe = PacmanGame.plateauDeJeu.solofireBomb.positionX; int Ybombe = PacmanGame.plateauDeJeu.solofireBomb.positionY;
+		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
+			EntiteeMonstre monstre = it.next();
+			if ((monstre.positionX + cercleDiametreReel >= Xbombe) && (monstre.positionX - cercleDiametreReel <= Xbombe)
+					&& ((monstre.positionY + cercleDiametreReel >= Ybombe) && (monstre.positionY - cercleDiametreReel <= Ybombe))) {
+					//TODO remove definitely mobs without using translation
+					monstre.positionX = -90;monstre.positionY=-90;
+					PacmanGame.score += 10;
 			}
 		}
 	}

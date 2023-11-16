@@ -1,5 +1,6 @@
 package jeu;
 
+import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -8,7 +9,7 @@ public class PlateauDeJeu {
 
     private final int largeur = 16;
     private final int hauteur = 9;
-    private final int nombreDeMonstre = 10;
+    private final int nombreDeMonstre = 20;
     private ArrayList<Case> cases;
 
     public FireBomb solofireBomb;
@@ -22,7 +23,7 @@ public class PlateauDeJeu {
     public PlateauDeJeu(int randomSeed) {
         this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
         this.entiteeMonstres = new ArrayList<>();
-        this.solofireBomb = new FireBomb(-90,-90);
+        this.solofireBomb = new FireBomb(-90,-90); //TODO set solofireBomb inexistant at the beginning
         System.out.println("Seed: " + randomSeed);
         genererPlateau(randomSeed);
     }
@@ -149,6 +150,5 @@ public class PlateauDeJeu {
     public int getHauteur() {
         return hauteur;
     }
-
 
 }
