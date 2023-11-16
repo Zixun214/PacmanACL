@@ -4,9 +4,11 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 
 import engine.Cmd;
 import engine.Game;
+import jeu.EntiteeMonstre;
 import jeu.PlateauDeJeu;
 
 /**
@@ -24,6 +26,8 @@ public class PacmanGame implements Game {
 
 	public static int sidePacman = 2; //2 = base, 4 = gauche, 6 = droite, 8 = haut
 
+	public static int isHit = 0;
+
 	protected static final int iniPosX = 90 - cercleDiametre / 2;
 	protected static final int iniPosY = 90 - cercleDiametre / 2;
 
@@ -35,6 +39,8 @@ public class PacmanGame implements Game {
 	 * le plateau de jeu
 	 */
 	public static PlateauDeJeu plateauDeJeu;
+
+	private static boolean pushedEffect = true;
 
 	/**
 	 * constructeur avec fichier source pour le help
@@ -107,6 +113,7 @@ public class PacmanGame implements Game {
 				PacmanGame.sidePacman = 6;
 				break;
 		}
+		collisionJoueurMonstre();
 	}
 
 	/**
@@ -116,6 +123,21 @@ public class PacmanGame implements Game {
 	public boolean isFinished() {
 		// le jeu n'est jamais fini
 		return false;
+	}
+
+	/**
+	 * Detecte la collision entre un monstre et un joueur
+	 *
+	 */
+	public void collisionJoueurMonstre(){
+		int cercleDiametreReel = cercleDiametre/2;
+		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
+			EntiteeMonstre monstre = it.next();
+			if( (monstre.positionX + cercleDiametreReel >= posPacmanX) && (monstre.positionX - cercleDiametreReel <= posPacmanX)
+					&& ((monstre.positionY + cercleDiametreReel >= posPacmanY) && (monstre.positionY - cercleDiametreReel <= posPacmanY))){
+						PacmanGame.isHit = 1;
+			}
+		}
 	}
 
 }

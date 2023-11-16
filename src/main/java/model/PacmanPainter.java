@@ -44,6 +44,8 @@ public class PacmanPainter implements GamePainter {
 	private int frameIndexMonster;
 
 	private int animationSpeed = 100;
+	private int timerCollision = 0;
+	private int timerCollisionMAXVALUE = 10; //environ 1 seconde d'animation
 
 	/**
 	 * appelle constructeur parent
@@ -121,14 +123,27 @@ public class PacmanPainter implements GamePainter {
 				default: break;
 			}
 			for(int i = 0; i < 17; i++) {
-				if (PacmanGame.sidePacman == 0) {
-					if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_000" + i + ".png"));
-					else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_00" + i + ".png"));
+				if (PacmanGame.isHit == 0) {
+					if (PacmanGame.sidePacman == 0) {
+						if (i < 10)
+							pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_000" + i + ".png"));
+						else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_00" + i + ".png"));
+					} else {
+						if (i < 10)
+							pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_000" + i + ".png"));
+						else
+							pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_00" + i + ".png"));
+					}
 				} else {
-					if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_000" + i + ".png"));
-					else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_00" + i + ".png"));
+					if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_hitA_000" + i + ".png"));
+					else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_hitA_00" + i + ".png"));
+					if (i == 16) timerCollision++;
+					if (timerCollision == timerCollisionMAXVALUE) {
+						PacmanGame.isHit = 0;timerCollision = 0;
+					}
 				}
 			}
+
 			for(int i = 0; i< 13; i++){
 				if (i < 10) monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_000" + i + ".png"));
 				else monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_00" + i + ".png"));
@@ -149,17 +164,12 @@ public class PacmanPainter implements GamePainter {
 			Image imgM = monsterAnimation[frameIndexMonster];
 			g.drawImage(imgM, monstre.positionX, monstre.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
 		}
-		/*
-		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
-			EntiteeMonstre monstre = it.next();
-			Image imgM = Toolkit.getDefaultToolkit().getImage("ressources/enemy_walkA_0000.png");
-			g.drawImage(imgM, monstre.positionX,monstre.positionY,SCALEWIDTH, SCALEHEIGHT, this.frame);
-		 */
 
 		//Afficher du texte
 		// Màj et dessine le score
 		scoreDisplay.setText("Score: " + "test");
 		scoreDisplay.drawText(g2d, 10, 20);
+
 	}
 
 	@Override

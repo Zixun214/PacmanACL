@@ -8,7 +8,7 @@ public class PlateauDeJeu {
 
     private final int largeur = 16;
     private final int hauteur = 9;
-    private final int nombreDeMonstre = 5;
+    private final int nombreDeMonstre = 10;
     private ArrayList<Case> cases;
 
     private ArrayList<Entitee> entitees;
