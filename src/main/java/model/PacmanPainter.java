@@ -16,6 +16,7 @@ import engine.TextManager;
 import jeu.Case;
 import jeu.CaseMur;
 import jeu.EntiteeMonstre;
+import jeu.FireBomb;
 
 import javax.imageio.ImageIO;
 
@@ -112,27 +113,26 @@ public class PacmanPainter implements GamePainter {
 		//Dessiner le personnage avec textures et animations
 		BufferedImage[] pacmanAnimation = new BufferedImage[17];
 		BufferedImage[] monsterAnimation = new BufferedImage[13];
+		BufferedImage[] fireAnimation = new BufferedImage[17];
 		try {
 			String side = "";
-			switch (PacmanGame.sidePacman){
+			switch (PacmanGame.lastButtonPressed){
+				case (0) :
+                case (2) : side = "A"; break;
 				case (4) : side = "D"; break;
-				case (2) : side = "A"; break;
-				case (6) : side = "B"; break;
+                case (6) : side = "B"; break;
 				case (8) : side = "C"; break;
-				case (0) : side = "E";  break;
 				default: break;
 			}
 			for(int i = 0; i < 17; i++) {
 				if (PacmanGame.isHit == 0) {
 					if (PacmanGame.sidePacman == 0) {
-						if (i < 10)
-							pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_000" + i + ".png"));
-						else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_00" + i + ".png"));
+						pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_0000.png"));
+						//if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_000" + i + ".png"));
+						//else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_00" + i + ".png"));
 					} else {
-						if (i < 10)
-							pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_000" + i + ".png"));
-						else
-							pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_00" + i + ".png"));
+						if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_000" + i + ".png"));
+						else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_00" + i + ".png"));
 					}
 				} else {
 					if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_hitA_000" + i + ".png"));
@@ -148,6 +148,11 @@ public class PacmanPainter implements GamePainter {
 				if (i < 10) monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_000" + i + ".png"));
 				else monsterAnimation[i] = ImageIO.read(new File("ressources/enemy_walkA_00" + i + ".png"));
 			}
+
+			for(int i = 1; i < 17; i++){
+				fireAnimation[i] = ImageIO.read(new File("ressources/Fire-bomb" + i + ".png"));
+			}
+
 		}catch (IOException e){
 			e.printStackTrace();
 		}
@@ -165,9 +170,15 @@ public class PacmanPainter implements GamePainter {
 			g.drawImage(imgM, monstre.positionX, monstre.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
 		}
 
+		//Dessiner les bombes
+		Image imgF = fireAnimation[frameIndex];
+		FireBomb fire = PacmanGame.plateauDeJeu.solofireBomb;
+		g.drawImage(imgF, fire.positionX, fire.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
+
+
 		//Afficher du texte
 		// Màj et dessine le score
-		scoreDisplay.setText("Score: " + "test");
+		scoreDisplay.setText("Score: " + 0);
 		scoreDisplay.drawText(g2d, 10, 20);
 
 	}

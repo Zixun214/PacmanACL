@@ -1,13 +1,10 @@
 package jeu;
 
 import model.PacmanGame;
-public class EntiteeMonstre extends EntiteePNJ {
-    public int positionX;
-    public int positionY;
+public class EntiteeMonstre extends Entitee {
 
     public EntiteeMonstre(PlateauDeJeu pdj) {
-        positionY = 0;
-        positionX = 0;
+        super(0,0);
         initialiserMonstre(pdj);
     }
 

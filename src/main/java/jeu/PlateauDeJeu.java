@@ -11,10 +11,9 @@ public class PlateauDeJeu {
     private final int nombreDeMonstre = 10;
     private ArrayList<Case> cases;
 
-    private ArrayList<Entitee> entitees;
+    public FireBomb solofireBomb;
 
     private ArrayList<EntiteeMonstre> entiteeMonstres;
-
 
     public PlateauDeJeu() {
         this(new Random().nextInt());
@@ -22,8 +21,8 @@ public class PlateauDeJeu {
 
     public PlateauDeJeu(int randomSeed) {
         this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
-        this.entitees = new ArrayList<>();
         this.entiteeMonstres = new ArrayList<>();
+        this.solofireBomb = new FireBomb(-90,-90);
         System.out.println("Seed: " + randomSeed);
         genererPlateau(randomSeed);
     }
@@ -142,6 +141,7 @@ public class PlateauDeJeu {
         return this.entiteeMonstres.iterator();
     }
 
+
     public int getLargeur() {
         return largeur;
     }
@@ -149,4 +149,6 @@ public class PlateauDeJeu {
     public int getHauteur() {
         return hauteur;
     }
+
+
 }
