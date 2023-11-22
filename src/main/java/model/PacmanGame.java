@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import engine.Cmd;
 import engine.Game;
+import jeu.Case;
 import jeu.EntiteeMonstre;
 import jeu.FireBomb;
 import jeu.PlateauDeJeu;
@@ -132,8 +133,8 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public boolean isFinished() {
-		// le jeu n'est jamais fini
-		return false;
+		Case current = plateauDeJeu .getCase(PacmanGame.posPacmanX / 60, PacmanGame.posPacmanY / 60);
+		return current.isTresor();
 	}
 
 	/**
