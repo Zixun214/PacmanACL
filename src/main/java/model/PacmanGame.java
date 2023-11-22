@@ -126,6 +126,11 @@ public class PacmanGame implements Game {
 				break;
 		}
 		collisionJoueurMonstre();
+		if (isFinished()){
+			System.out.println("Congrats! You won!");
+			System.exit(0);
+
+		}
 	}
 
 	/**
@@ -133,7 +138,9 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public boolean isFinished() {
-		Case current = plateauDeJeu .getCase(PacmanGame.posPacmanX / 60, PacmanGame.posPacmanY / 60);
+		int xCurr = (PacmanGame.posPacmanX - PacmanGame.posPacmanX%10) / 60;
+		int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
+		Case current = plateauDeJeu .getCase(xCurr, yCurr);
 		return current.isTresor();
 	}
 
