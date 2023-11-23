@@ -1,5 +1,7 @@
 package jeu;
 
+import model.PacmanGame;
+
 import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,11 +50,27 @@ public class PlateauDeJeu {
      * Génération aléatoire d'une case trésor
      */
     public void genererCaseTresor(){
+        int index = choisirCase();
+        cases.set(index, new CaseTresor()); //remplace une case chemin par une case trésor
+    }
+
+    public void genererCaseTP(){
+        int caseTP = choisirCase();
+        int caseCible = choisirCase();
+
+        while (caseTP == caseCible){
+            caseCible = choisirCase();
+        }
+
+        cases.set(caseTP, new CaseTP(getXcase(caseCible),getYcase(caseCible))); //remplace une case chemin par une case trésor
+    }
+
+    public int choisirCase(){
         int index = 0;
-        while (cases.get(index).isBlocking()){ //tant que la case est bloquante (mur)
+        while (cases.get(index).isBlocking() || index == 17){ //tant que la case est bloquante (mur) ou que c'est la case de départ
             index = (int) (Math.random() * cases.size()-1); //on génère un index aléatoire
         }
-        cases.set(index, new CaseTresor()); //remplace une case chemin par une case trésor
+        return index;
     }
 
     /***
@@ -87,7 +105,16 @@ public class PlateauDeJeu {
         }
 
         genererMonstre();
+        genererCaseTP();
         genererCaseTresor();
+    }
+
+    public void gameEvent(){
+        int xCurr = (PacmanGame.posPacmanX - PacmanGame.posPacmanX%10) / 60;
+        int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
+        // va chercher la case sur laquelle se trouve le joueur
+        Case current = this.getCase(xCurr, yCurr);
+        current.event(); //execute l'event de la case
     }
 
     public boolean isMurDessous(int x, int y){

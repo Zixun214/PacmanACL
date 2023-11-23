@@ -131,6 +131,7 @@ public class PacmanGame implements Game {
 			System.exit(0);
 
 		}
+		plateauDeJeu.gameEvent();
 	}
 
 	/**
@@ -193,5 +194,10 @@ public class PacmanGame implements Game {
 				PacmanGame.plateauDeJeu.solofireBomb = new FireBomb(PacmanGame.posPacmanX + 60, PacmanGame.posPacmanY);
 				break;
 		}
+	}
+
+	public static void teleportation(int x, int y){
+		PacmanGame.posPacmanX = x;
+		PacmanGame.posPacmanY = y;
 	}
 }
