@@ -1,25 +1,33 @@
 package jeu;
 
+import model.PacmanGame;
+
+import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class PlateauDeJeu {
 
     private final int largeur = 16;
     private final int hauteur = 9;
-    private final int nombreDeMonstre = 5;
+    private final int nombreDeMonstre = 20;
     private ArrayList<Case> cases;
 
-    private ArrayList<Entitee> entitees;
+    public FireBomb solofireBomb;
 
     private ArrayList<EntiteeMonstre> entiteeMonstres;
 
-
     public PlateauDeJeu() {
+        this(new Random().nextInt());
+    }
+
+    public PlateauDeJeu(int randomSeed) {
         this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
-        this.entitees = new ArrayList<>();
         this.entiteeMonstres = new ArrayList<>();
-        genererPlateau();
+        this.solofireBomb = new FireBomb(-90,-90); //TODO set solofireBomb inexistant at the beginning
+        System.out.println("Seed: " + randomSeed);
+        genererPlateau(randomSeed);
     }
 
     /**
@@ -42,19 +50,35 @@ public class PlateauDeJeu {
      * Génération aléatoire d'une case trésor
      */
     public void genererCaseTresor(){
+        int index = choisirCase();
+        cases.set(index, new CaseTresor()); //remplace une case chemin par une case trésor
+    }
+
+    public void genererCaseTP(){
+        int caseTP = choisirCase();
+        int caseCible = choisirCase();
+
+        while (caseTP == caseCible){
+            caseCible = choisirCase();
+        }
+
+        cases.set(caseTP, new CaseTP(getXcase(caseCible),getYcase(caseCible))); //remplace une case chemin par une case trésor
+    }
+
+    public int choisirCase(){
         int index = 0;
-        while (cases.get(index).isBlocking()){ //tant que la case est bloquante (mur)
+        while (cases.get(index).isBlocking() || index == 17){ //tant que la case est bloquante (mur) ou que c'est la case de départ
             index = (int) (Math.random() * cases.size()-1); //on génère un index aléatoire
         }
-        cases.set(index, new CaseTresor()); //remplace une case chemin par une case trésor
+        return index;
     }
 
     /***
      * Génère le plateau de jeu avec les cases (trésor, mur, etc.)
      */
-    public void genererPlateau() { //labyrinthe de test, juste une boite
+    public void genererPlateau(int randomSeed) { //labyrinthe de test, juste une boite
         Labyrinthe lab = new Labyrinthe(4, 7); //créer un labyrinthe de la taille du plateau de jeu sans les murs extérieurs
-        lab.creerLabyrinthe();
+        lab.creerLabyrinthe(randomSeed);
         for (int i = 0; i < hauteur; i++) {
             for (int j = 0; j < largeur; j++) {
                 if (i == 0 || i == hauteur - 1 || j == 0 || j == largeur - 1) { //mur extérieur
@@ -70,8 +94,27 @@ public class PlateauDeJeu {
             }
         }
 
+        //Modification apparence des murs
+        for(int i = 0; i < hauteur; i++){
+            for(int j = 0; j < largeur; j++ ){
+                if(this.getCase(j,i) instanceof CaseMur) {
+                    if (isMurDessous(j, i)) ((CaseMur)this.getCase(j,i)).setMurDeCote(true);
+                    else ((CaseMur)this.getCase(j,i)).setMurDeCote(false);
+                }
+            }
+        }
+
         genererMonstre();
+        genererCaseTP();
         genererCaseTresor();
+    }
+
+    public void gameEvent(){
+        int xCurr = (PacmanGame.posPacmanX - PacmanGame.posPacmanX%10) / 60;
+        int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
+        // va chercher la case sur laquelle se trouve le joueur
+        Case current = this.getCase(xCurr, yCurr);
+        current.event(); //execute l'event de la case
     }
 
     public boolean isMurDessous(int x, int y){
@@ -125,4 +168,14 @@ public class PlateauDeJeu {
     public Iterator<EntiteeMonstre> monstreIterator() {
         return this.entiteeMonstres.iterator();
     }
+
+
+    public int getLargeur() {
+        return largeur;
+    }
+
+    public int getHauteur() {
+        return hauteur;
+    }
+
 }

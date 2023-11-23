@@ -23,4 +23,8 @@ public class CaseMur extends Case {
     public boolean estMurDeCote(){
         return murDeCote;
     }
+
+    public void setMurDeCote(boolean set){
+        this.murDeCote =set;
+    }
 }

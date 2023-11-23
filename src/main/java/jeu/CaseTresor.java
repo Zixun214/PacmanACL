@@ -12,6 +12,11 @@ public class CaseTresor extends Case {
     }
 
     @Override
+    public boolean isTresor() {
+        return true;
+    }
+
+    @Override
     public Color getColor() {
         return Color.YELLOW;
     }

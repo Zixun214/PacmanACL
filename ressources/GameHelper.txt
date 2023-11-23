@@ -1,4 +1,5 @@
 Press key below to move :
+"f" to fire
 "z" to go up
 "s" to go down
 "q" to go left

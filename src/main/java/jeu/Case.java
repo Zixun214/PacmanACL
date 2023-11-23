@@ -8,8 +8,16 @@ public abstract class Case {
     //TODO: Attribut pour la texture ?
     public Case(){}
 
+    public void event(){
+        return;
+    }
+
     public boolean isBlocking() {
         return blocking;
+    }
+
+    public boolean isTresor() {
+        return false;
     }
 
     public abstract Color getColor();
