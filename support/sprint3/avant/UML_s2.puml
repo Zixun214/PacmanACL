@@ -56,8 +56,17 @@ package jeu #LightBlue{
        void event();
     }
 
-    class CaseTresor{
-    }
+        class CaseTresor{
+        }
+
+        class EntiteeChronometre{
+
+        }
+
+        class EntiteeSoin{
+
+        }
+
 
 
 
@@ -85,6 +94,7 @@ package jeu #LightBlue{
         int positionX;
         int positionY;
         void initialiserMonstre(PlateauDeJeu pdj);
+        void deplacement();
     }
 
 
