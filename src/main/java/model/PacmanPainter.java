@@ -44,9 +44,11 @@ public class PacmanPainter implements GamePainter {
 	private int frameIndex;
 	private int frameIndexMonster;
 
-	private int animationSpeed = 100;
 	private int timerCollision = 0;
 	private int timerCollisionMAXVALUE = 10; //environ 1 seconde d'animation
+
+	private int fireTimer = 0;
+	private int fireTimerMAXVALUE = 20; //envirion 2 seconde d'animation
 
 
 	/**
@@ -152,6 +154,12 @@ public class PacmanPainter implements GamePainter {
 
 			for(int i = 1; i < 17; i++){
 				fireAnimation[i] = ImageIO.read(new File("ressources/Fire-bomb" + i + ".png"));
+				if (i == 16) fireTimer++;
+				if (fireTimer == fireTimerMAXVALUE) {
+					PacmanGame.plateauDeJeu.solofireBomb.positionX = -90;
+					PacmanGame.plateauDeJeu.solofireBomb.positionY = -90;
+					fireTimer = 0;
+				}
 			}
 
 		}catch (IOException e){
@@ -169,12 +177,15 @@ public class PacmanPainter implements GamePainter {
 			EntiteeMonstre monstre = it.next();
 			Image imgM = monsterAnimation[frameIndexMonster];
 			g.drawImage(imgM, monstre.positionX, monstre.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
+			monstre.move();
+			monstre.changeDirection();
 		}
 
 		//Dessiner les bombes
 		Image imgF = fireAnimation[frameIndex];
 		FireBomb fire = PacmanGame.plateauDeJeu.solofireBomb;
 		g.drawImage(imgF, fire.positionX, fire.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
+
 
 
 		//Afficher du texte

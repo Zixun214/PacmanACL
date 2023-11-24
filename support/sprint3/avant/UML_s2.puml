@@ -56,19 +56,14 @@ package jeu #LightBlue{
        void event();
     }
 
-        class CaseTresor{
-        }
+    class CaseTresor{
+    }
 
-        class EntiteeChronometre{
+    class EntiteeChronometre{
+    }
 
-        }
-
-        class EntiteeSoin{
-
-        }
-
-
-
+    class EntiteeSoin{
+    }
 
     class CaseMur{
       Color getColor();

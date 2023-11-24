@@ -11,7 +11,7 @@ public class PlateauDeJeu {
 
     private final int largeur = 16;
     private final int hauteur = 9;
-    private final int nombreDeMonstre = 20;
+    private final int nombreDeMonstre = 10;
     private ArrayList<Case> cases;
 
     public FireBomb solofireBomb;
@@ -124,6 +124,30 @@ public class PlateauDeJeu {
             return false;
         }
     }
+    public boolean isMurDessus(int x, int y){
+        try {
+            return this.getCase(x,y-1).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    public boolean isMurAGauche(int x, int y){
+        try {
+            return this.getCase(x-1,y).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    public boolean isMurADroite(int x, int y){
+        try {
+            return this.getCase(x+1,y).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
 
     /***
      * Retourne la case aux coordonnées x et y
