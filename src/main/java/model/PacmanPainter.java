@@ -39,6 +39,8 @@ public class PacmanPainter implements GamePainter {
 
 	private TextManager scoreDisplay;
 
+	private TextManager chronoDisplay;
+
 	private Frame frame;
 
 	private int frameIndex;
@@ -59,6 +61,7 @@ public class PacmanPainter implements GamePainter {
 	public PacmanPainter() {
 		// Initialise TextManager avec un affichage par défaut de score
 		scoreDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
+		chronoDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
 		this.frame = new Frame("Image Drawing Example");
 		this.frameIndex = 0;
 		this.frameIndexMonster = 0;
@@ -192,6 +195,11 @@ public class PacmanPainter implements GamePainter {
 		// Màj et dessine le score
 		scoreDisplay.setText("Score: " +  PacmanGame.score);
 		scoreDisplay.drawText(g2d, 10, 20);
+
+		//Afficher chrono
+		chronoDisplay.setText("Timer : " + (PacmanGame.DURATION - PacmanGame.secondsPassed));
+		chronoDisplay.drawText(g2d, 420, 20);
+
 
 	}
 

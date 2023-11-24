@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import engine.Cmd;
 import engine.Game;
@@ -37,6 +39,7 @@ public class PacmanGame implements Game {
 	public static int posPacmanY;
 
 	public static final int pas = 10;
+
 	/**
 	 * le plateau de jeu
 	 */
@@ -47,11 +50,18 @@ public class PacmanGame implements Game {
 
 	public static int score = 0;
 
+	public Timer timer;
+
+	public static final int DURATION = 240;
+
+	public static int secondsPassed = 0;
+
 
 	/**
 	 * constructeur avec fichier source pour le help
 	 */
 	public PacmanGame(String source) {
+		this.timer = new Timer();
 		this.plateauDeJeu = new PlateauDeJeu();
 		initialisation();
 		BufferedReader helpReader;
@@ -200,4 +210,25 @@ public class PacmanGame implements Game {
 		PacmanGame.posPacmanX = x;
 		PacmanGame.posPacmanY = y;
 	}
+
+	public void startTimer() {
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			public void run() {
+				if (secondsPassed < DURATION) {
+					//System.out.println("Seconds passed: " + secondsPassed);
+					secondsPassed++;
+				} else {
+					//System.out.println("Timer expired. Task completed.");
+					timer.cancel(); // Stop the timer when the duration is reached
+					System.out.println("Out of time !");
+					System.exit(0);
+				}
+			}
+		};
+
+		// Schedule the task to run every 1000 milliseconds (1 second)
+		timer.scheduleAtFixedRate(task, 0, 1000);
+	}
+
 }
