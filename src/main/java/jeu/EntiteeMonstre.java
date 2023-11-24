@@ -3,7 +3,7 @@ package jeu;
 import model.PacmanGame;
 public class EntiteeMonstre extends Entitee {
 
-    public int direction = random.nextInt(4);
+    public int direction = random.nextInt(3);
 
     public EntiteeMonstre(PlateauDeJeu pdj) {
         super(0,0);
@@ -44,7 +44,7 @@ public class EntiteeMonstre extends Entitee {
         if(this.direction == 0) {
             if (((this.positionY + 30) % 60 == 0)) {
                 if (PacmanGame.plateauDeJeu.isMurDessus(translationX, translationY + 1)) {
-                    this.direction = 1;
+                    this.direction = random.nextInt(1)+1;
                 }
             }
         }
