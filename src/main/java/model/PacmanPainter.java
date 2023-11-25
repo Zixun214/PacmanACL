@@ -52,6 +52,8 @@ public class PacmanPainter implements GamePainter {
 	private int fireTimer = 0;
 	private int fireTimerMAXVALUE = 20; //envirion 2 seconde d'animation
 
+	public static final Image pauseImage = Toolkit.getDefaultToolkit().getImage("ressources/pauseBg.png");
+
 
 	/**
 	 * appelle constructeur parent
@@ -72,7 +74,6 @@ public class PacmanPainter implements GamePainter {
 	 */
 	@Override
 	public void draw(BufferedImage im) {
-
 		//Afficher les grilles
 		int width = im.getWidth();
 		int height = im.getHeight();
@@ -190,7 +191,6 @@ public class PacmanPainter implements GamePainter {
 		g.drawImage(imgF, fire.positionX, fire.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
 
 
-
 		//Afficher du texte
 		// Màj et dessine le score
 		scoreDisplay.setText("Score: " +  PacmanGame.score);
@@ -201,6 +201,8 @@ public class PacmanPainter implements GamePainter {
 		chronoDisplay.drawText(g2d, 420, 20);
 
 
+		//Si le jeu est en pause
+		if(PacmanGame.gameInPause) g.drawImage(pauseImage, 0, 0, this.frame);
 	}
 
 	@Override

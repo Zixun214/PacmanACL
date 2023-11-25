@@ -89,7 +89,7 @@
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
             <version>3.3.3</version>
-            <classifier>natives-linux</classifier> <!-- modify here as "natives-linux/macos" if needed -->
+            <classifier>natives-windows</classifier> <!-- modify here as "natives-linux/macos" if needed -->
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
@@ -100,7 +100,7 @@
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-glfw</artifactId>
             <version>3.3.3</version>
-            <classifier>natives-linux</classifier> <!-- same as before -->
+            <classifier>natives-windows</classifier> <!-- same as before -->
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
@@ -111,7 +111,7 @@
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-stb</artifactId>
             <version>3.3.3</version>
-            <classifier>natives-linux</classifier> <!-- same as before -->
+            <classifier>natives-windows</classifier> <!-- same as before -->
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
@@ -122,7 +122,7 @@
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
             <version>3.3.3</version>
-            <classifier>natives-linux</classifier> <!-- same as before -->
+            <classifier>natives-windows</classifier> <!-- same as before -->
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
@@ -133,7 +133,7 @@
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-openal</artifactId>
             <version>3.3.3</version>
-            <classifier>natives-linux</classifier>
+            <classifier>natives-windows</classifier>
         </dependency>
 
 

@@ -47,6 +47,7 @@ public class PacmanGame implements Game {
 
 
 	public static int lastButtonPressed = 0;
+	public static boolean gameInPause = false;
 
 	public static int score = 0;
 
@@ -91,7 +92,8 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public void evolve(Cmd commande) {
-		if (commande == Cmd.IDLE || commande == null) {
+		if(commande == Cmd.PAUSE) gameInPause = !gameInPause;
+		if (commande == Cmd.IDLE || commande == null || gameInPause) {
 			PacmanGame.sidePacman = 0;
 			return;
 		}
@@ -142,6 +144,14 @@ public class PacmanGame implements Game {
 
 		}
 		plateauDeJeu.gameEvent();
+	}
+
+	/**
+	 * verifier si le jeu est en pause
+	 */
+	@Override
+	public boolean isPaused() {
+		return gameInPause;
 	}
 
 	/**
