@@ -31,6 +31,8 @@ public class PacmanGame implements Game {
 	public static int sidePacman = 2; //2 = base, 4 = gauche, 6 = droite, 8 = haut
 
 	public static int isHit = 0;
+	public static int life = 6;
+	public static int cooldownHit = 0;
 
 	protected static final int iniPosX = 90 - cercleDiametre / 2;
 	protected static final int iniPosY = 90 - cercleDiametre / 2;
@@ -97,6 +99,7 @@ public class PacmanGame implements Game {
 			PacmanGame.sidePacman = 0;
 			return;
 		}
+		if(cooldownHit > 0) cooldownHit--;
 		//System.out.println("Execute " + commande);
 		switch (commande) {
 			//2 conditions pour déterminer le mur
@@ -139,7 +142,8 @@ public class PacmanGame implements Game {
 		}
 		collisionJoueurMonstre();
 		if (isFinished()){
-			System.out.println("Congrats! You won!");
+			if(life <= 0) System.out.println("You died!");
+			else System.out.println("Congrats! You won!");
 			System.exit(0);
 
 		}
@@ -159,6 +163,7 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public boolean isFinished() {
+		if(life <= 0) return true;
 		int xCurr = (PacmanGame.posPacmanX - PacmanGame.posPacmanX%10) / 60;
 		int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
 		Case current = plateauDeJeu .getCase(xCurr, yCurr);
@@ -175,6 +180,7 @@ public class PacmanGame implements Game {
 			if ((monstre.positionX + cercleDiametreReel >= posPacmanX) && (monstre.positionX - cercleDiametreReel <= posPacmanX)
 					&& ((monstre.positionY + cercleDiametreReel >= posPacmanY) && (monstre.positionY - cercleDiametreReel <= posPacmanY))) {
 				PacmanGame.isHit = 1;
+				takeDamage();
 			}
 		}
 	}
@@ -194,6 +200,17 @@ public class PacmanGame implements Game {
 					monstre.positionX = -90;monstre.positionY=-90;
 					PacmanGame.score += 10;
 			}
+		}
+	}
+
+	/**
+	 * Retire la vie du personnage suite à une collision
+	 */
+	public void takeDamage() {
+		if(cooldownHit > 0) return;
+		else {
+			cooldownHit = 10;
+			PacmanGame.life --;
 		}
 	}
 

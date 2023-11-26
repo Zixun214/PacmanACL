@@ -53,6 +53,9 @@ public class PacmanPainter implements GamePainter {
 	private int fireTimerMAXVALUE = 20; //envirion 2 seconde d'animation
 
 	public static final Image pauseImage = Toolkit.getDefaultToolkit().getImage("ressources/pauseBg.png");
+	public static final Image coeurPlein = Toolkit.getDefaultToolkit().getImage("ressources/CoeurPlein.png");
+	public static final Image coeurDemi = Toolkit.getDefaultToolkit().getImage("ressources/CoeurDemi.png");
+	public static final Image coeurVide = Toolkit.getDefaultToolkit().getImage("ressources/CoeurVide.png");
 
 
 	/**
@@ -200,6 +203,13 @@ public class PacmanPainter implements GamePainter {
 		chronoDisplay.setText("Timer : " + (PacmanGame.DURATION - PacmanGame.secondsPassed));
 		chronoDisplay.drawText(g2d, 420, 20);
 
+		//Afficher Vie
+		for(int i=0; i<90; i=i+30) {
+			int heart = i/30 + 1;
+			if(PacmanGame.life >= heart*2) g.drawImage(coeurPlein, WIDTH-100+i, 10, 28, 28, this.frame);
+			else if(PacmanGame.life == heart*2-1) g.drawImage(coeurDemi, WIDTH-100+i, 10, 28, 28, this.frame);
+			else g.drawImage(coeurVide, WIDTH-100+i, 10, 28, 28, this.frame);
+		}
 
 		//Si le jeu est en pause
 		if(PacmanGame.gameInPause) g.drawImage(pauseImage, 0, 0, this.frame);
