@@ -1,5 +1,7 @@
 package engine;
 
+import model.PacmanGame;
+
 /**
  * @author Horatiu Cirstea, Vincent Thomas
  *
@@ -58,10 +60,15 @@ public class GameEngineGraphical {
 		while (!this.game.isFinished()) {
 			// demande controle utilisateur
 			Cmd c = this.gameController.getCommand();
-			// fait evoluer le game
-			this.game.evolve(c);
-			// affiche le game
-			this.gui.paint();
+			if (!this.game.isPaused()) {
+				this.game.evolve(c);
+				this.gui.paint();
+			} else {
+				if(c == Cmd.PAUSE){
+					PacmanGame.gameInPause=false;
+				}
+				Thread.sleep(100);
+			}
 			// met en attente
 			Thread.sleep(100);
 		}

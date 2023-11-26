@@ -244,7 +244,8 @@ public class PacmanGame implements Game {
 			public void run() {
 				if (secondsPassed < DURATION) {
 					//System.out.println("Seconds passed: " + secondsPassed);
-					secondsPassed++;
+					if(!gameInPause)
+						secondsPassed++;
 				} else {
 					//System.out.println("Timer expired. Task completed.");
 					timer.cancel(); // Stop the timer when the duration is reached
