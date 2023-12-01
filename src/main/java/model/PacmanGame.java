@@ -55,7 +55,7 @@ public class PacmanGame implements Game {
 
 	public Timer timer;
 
-	public static final int DURATION = 240;
+	public static int DURATION = 240;
 
 	public static int secondsPassed = 0;
 
