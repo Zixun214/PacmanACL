@@ -10,10 +10,14 @@ import java.util.TimerTask;
 
 import engine.Cmd;
 import engine.Game;
+import engine.GameEngineGraphical;
 import jeu.Case;
 import jeu.EntiteeMonstre;
 import jeu.FireBomb;
 import jeu.PlateauDeJeu;
+import start.Main;
+
+import javax.swing.*;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -142,9 +146,13 @@ public class PacmanGame implements Game {
 		}
 		collisionJoueurMonstre();
 		if (isFinished()){
-			if(life <= 0) System.out.println("You died!");
-			else System.out.println("Congrats! You won!");
-			System.exit(0);
+			if(life <= 0){
+				System.out.println("You died!");
+				Main.winTurn=false;
+			} else {
+				System.out.println("Congrats! You won!");
+				PacmanGame.score+=30;
+			}
 
 		}
 		plateauDeJeu.gameEvent();

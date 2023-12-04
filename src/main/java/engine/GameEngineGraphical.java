@@ -67,11 +67,12 @@ public class GameEngineGraphical {
 				if(c == Cmd.PAUSE){
 					PacmanGame.gameInPause=false;
 				}
-				Thread.sleep(100);
+				Thread.sleep(50);
 			}
 			// met en attente
 			Thread.sleep(100);
 		}
+		this.gui.clean();
 	}
 
 }

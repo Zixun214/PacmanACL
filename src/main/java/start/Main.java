@@ -6,12 +6,14 @@ import model.PacmanController;
 import model.PacmanGame;
 import model.PacmanPainter;
 
+import javax.swing.*;
+
 /**
  * lancement du moteur avec le main.java.jeu
  */
 public class Main {
 	public static boolean StartGame=false;
-
+	public static boolean winTurn=true;
 	public static void main(String[] args) throws InterruptedException {
 
 //********** commenter cette partie s'il y a problème avec lwjgl
@@ -20,6 +22,32 @@ public class Main {
 			return;
 //***************
 		runGame();
+		while (true){
+			int option;
+			if(winTurn){
+				option = JOptionPane.showOptionDialog(
+						null,
+						"You win！want to continue your challenge？\n Time will go faster !!!",
+						"Win",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						new Object[]{"Continue", "Exit"},
+						"Continue");
+				if (option == JOptionPane.YES_OPTION) {
+					runGame();
+				} else {
+					System.exit(0);
+				}
+			}else{
+				JOptionPane.showMessageDialog(
+						null,
+						"You die! Here are your points: "+PacmanGame.score,
+						"End",
+						JOptionPane.INFORMATION_MESSAGE);
+				System.exit(0);
+			}
+		}
 	}
 
 	public static void startMenu(){
