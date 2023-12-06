@@ -40,19 +40,12 @@ public class Main {
 				e.printStackTrace();
 			}//*****
 		}
-
-//********** commenter cette partie s'il y a problème avec lwjgl
-		startMenu();
-		if(!StartGame)
-			return;
-//***************
-		runGame();
 		while (true){
 			int option;
 			if(winTurn){
 				option = JOptionPane.showOptionDialog(
 						null,
-						"You win！want to continue your challenge？\n Time will go faster !!!",
+						"You win！Here is your score : "+PacmanGame.score +"\n Want to continue your challenge？Time will go faster !!!",
 						"Win",
 						JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE,
@@ -67,7 +60,7 @@ public class Main {
 			}else{
 				JOptionPane.showMessageDialog(
 						null,
-						"You die! Here are your points: "+PacmanGame.score,
+						"You die! Here is your points: "+PacmanGame.score,
 						"End",
 						JOptionPane.INFORMATION_MESSAGE);
 				System.exit(0);
