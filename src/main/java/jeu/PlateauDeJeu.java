@@ -11,8 +11,10 @@ public class PlateauDeJeu {
 
     private final int largeur = 16;
     private final int hauteur = 9;
-    private final int nombreDeMonstre = 20;
+    private final int nombreDeMonstre = 5;
     private ArrayList<Case> cases;
+
+    private int nombreDeCaseChronoPlus = 2;
 
     public FireBomb solofireBomb;
 
@@ -54,6 +56,16 @@ public class PlateauDeJeu {
         cases.set(index, new CaseTresor()); //remplace une case chemin par une case trésor
     }
 
+    /**
+     * Génération aléatoire d'une case chrono
+     */
+    public void genererCaseChrono(int nombredecases){
+        for(int i = 0; i< nombredecases; i++) {
+            int index = choisirCase();
+            cases.set(index, new CaseChrono());
+        }
+    }
+
     public void genererCaseTP(){
         int caseTP = choisirCase();
         int caseCible = choisirCase();
@@ -61,7 +73,6 @@ public class PlateauDeJeu {
         while (caseTP == caseCible){
             caseCible = choisirCase();
         }
-
         cases.set(caseTP, new CaseTP(getXcase(caseCible),getYcase(caseCible))); //remplace une case chemin par une case trésor
     }
 
@@ -106,6 +117,7 @@ public class PlateauDeJeu {
 
         genererMonstre();
         genererCaseTP();
+        genererCaseChrono(nombreDeCaseChronoPlus);
         genererCaseTresor();
     }
 
@@ -124,6 +136,30 @@ public class PlateauDeJeu {
             return false;
         }
     }
+    public boolean isMurDessus(int x, int y){
+        try {
+            return this.getCase(x,y-1).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    public boolean isMurAGauche(int x, int y){
+        try {
+            return this.getCase(x-1,y).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    public boolean isMurADroite(int x, int y){
+        try {
+            return this.getCase(x+1,y).isBlocking();
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
 
     /***
      * Retourne la case aux coordonnées x et y

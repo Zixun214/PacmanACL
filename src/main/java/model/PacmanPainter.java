@@ -39,14 +39,26 @@ public class PacmanPainter implements GamePainter {
 
 	private TextManager scoreDisplay;
 
+	private TextManager chronoDisplay;
+
 	private Frame frame;
 
 	private int frameIndex;
 	private int frameIndexMonster;
+	private int frameIndexChrono;
+	private int frameIndexChest;
 
-	private int animationSpeed = 100;
+	private int frameIndexTeleportation;
 	private int timerCollision = 0;
 	private int timerCollisionMAXVALUE = 10; //environ 1 seconde d'animation
+
+	private int fireTimer = 0;
+	private int fireTimerMAXVALUE = 20; //envirion 2 seconde d'animation
+
+	public static final Image pauseImage = Toolkit.getDefaultToolkit().getImage("ressources/pauseBg.png");
+	public static final Image coeurPlein = Toolkit.getDefaultToolkit().getImage("ressources/CoeurPlein.png");
+	public static final Image coeurDemi = Toolkit.getDefaultToolkit().getImage("ressources/CoeurDemi.png");
+	public static final Image coeurVide = Toolkit.getDefaultToolkit().getImage("ressources/CoeurVide.png");
 
 
 	/**
@@ -57,9 +69,13 @@ public class PacmanPainter implements GamePainter {
 	public PacmanPainter() {
 		// Initialise TextManager avec un affichage par défaut de score
 		scoreDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
+		chronoDisplay = new TextManager("", new Font("Arial", Font.PLAIN, 16), Color.WHITE);
 		this.frame = new Frame("Image Drawing Example");
 		this.frameIndex = 0;
 		this.frameIndexMonster = 0;
+		this.frameIndexChrono = 0;
+		this.frameIndexChest = 0;
+		frameIndexTeleportation =0;
 	}
 
 	/**
@@ -67,7 +83,6 @@ public class PacmanPainter implements GamePainter {
 	 */
 	@Override
 	public void draw(BufferedImage im) {
-
 		//Afficher les grilles
 		int width = im.getWidth();
 		int height = im.getHeight();
@@ -101,10 +116,10 @@ public class PacmanPainter implements GamePainter {
 				else
 					imgC = Toolkit.getDefaultToolkit().getImage("ressources/wallStone_fence.png");
 			}
-			if(casePlateau.getColor() == Color.YELLOW){
-				imgC = Toolkit.getDefaultToolkit().getImage("ressources/barrelBomb0013.png");
+			if(casePlateau.getColor() == Color.GREEN || casePlateau.getColor() == Color.ORANGE || casePlateau.getColor() == Color.YELLOW){
+				imgC = Toolkit.getDefaultToolkit().getImage("ressources/groundEarth_checkered.png");
 			}
-			if(casePlateau.getColor() == Color.GREEN){
+			if(casePlateau.getColor() == Color.MAGENTA){
 				imgC = Toolkit.getDefaultToolkit().getImage("ressources/groundEarth_checkered.png");
 			}
 			g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*SCALEWIDTH, PacmanGame.plateauDeJeu.getYcase(i)*SCALEHEIGHT , this.frame);
@@ -115,6 +130,9 @@ public class PacmanPainter implements GamePainter {
 		BufferedImage[] pacmanAnimation = new BufferedImage[17];
 		BufferedImage[] monsterAnimation = new BufferedImage[13];
 		BufferedImage[] fireAnimation = new BufferedImage[17];
+		BufferedImage[] chronoAnimation = new BufferedImage[8];
+		BufferedImage[] chestAnimation = new BufferedImage[1];
+		BufferedImage[] teleportAnimation = new BufferedImage[3];
 		try {
 			String side = "";
 			switch (PacmanGame.lastButtonPressed){
@@ -152,6 +170,30 @@ public class PacmanPainter implements GamePainter {
 
 			for(int i = 1; i < 17; i++){
 				fireAnimation[i] = ImageIO.read(new File("ressources/Fire-bomb" + i + ".png"));
+				if (i == 16) fireTimer++;
+				if (fireTimer == fireTimerMAXVALUE) {
+					PacmanGame.plateauDeJeu.solofireBomb.positionX = -90;
+					PacmanGame.plateauDeJeu.solofireBomb.positionY = -90;
+					fireTimer = 0;
+				}
+			}
+
+			//Charger les cases chronos;
+			this.frameIndexChrono = (this.frameIndexChrono +1 ) % 8;
+			for(int i = 0; i < 8 ; i++){
+				chronoAnimation[i] = ImageIO.read(new File("ressources/dice01_000" + i + ".png"));
+			}
+
+			//Charger la case trésor
+			this.frameIndexChest = (this.frameIndexChest +1 ) % 1;
+			//for(int i = 0; i < 1 ; i++){
+			chestAnimation[0] = ImageIO.read(new File("ressources/chestA0000.png"));
+			//}
+
+			//Charger la case téléportation
+			this.frameIndexTeleportation = (this.frameIndexTeleportation +1 ) % 2;
+			for(int i = 0; i < 2 ; i++){
+				teleportAnimation[i] = ImageIO.read(new File("ressources/pipe000" + i + ".png"));
 			}
 
 		}catch (IOException e){
@@ -163,25 +205,62 @@ public class PacmanPainter implements GamePainter {
 		g.drawImage(img, PacmanGame.posPacmanX,PacmanGame.posPacmanY,SCALEWIDTH, SCALEHEIGHT, this.frame);
 
 
+
 		//Dessiner les monstres
 		this.frameIndexMonster = (this.frameIndexMonster + 1) % 13;
 		for (Iterator<EntiteeMonstre> it = PacmanGame.plateauDeJeu.monstreIterator(); it.hasNext(); ) {
 			EntiteeMonstre monstre = it.next();
 			Image imgM = monsterAnimation[frameIndexMonster];
 			g.drawImage(imgM, monstre.positionX, monstre.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
+			monstre.move();
+			monstre.changeDirection();
 		}
+
+		//Dessiner les cases
+		for(int i = 0; i< cases.size(); i++){
+			Case casePlateau = cases.get(i);
+			//Case chrono
+			if(casePlateau.getColor() == Color.ORANGE){
+				Image imgC = chronoAnimation[frameIndexChrono];
+				g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*SCALEWIDTH + 15, PacmanGame.plateauDeJeu.getYcase(i)*SCALEHEIGHT + 15 , SCALEWIDTH / 2, SCALEHEIGHT / 2, this.frame);
+			}
+			//Case trésor
+			if(casePlateau.getColor() == Color.YELLOW){
+				Image imgC = chestAnimation[frameIndexChest];
+				g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*SCALEWIDTH, PacmanGame.plateauDeJeu.getYcase(i)*SCALEHEIGHT  , SCALEWIDTH, SCALEHEIGHT , this.frame);
+			}
+			//Case téléportation
+			if(casePlateau.getColor() == Color.MAGENTA){
+				Image imgC = teleportAnimation[frameIndexTeleportation];
+				g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*SCALEWIDTH, PacmanGame.plateauDeJeu.getYcase(i)*SCALEHEIGHT  , SCALEWIDTH, SCALEHEIGHT , this.frame);
+			}
+		}
+
 
 		//Dessiner les bombes
 		Image imgF = fireAnimation[frameIndex];
 		FireBomb fire = PacmanGame.plateauDeJeu.solofireBomb;
 		g.drawImage(imgF, fire.positionX, fire.positionY, SCALEWIDTH, SCALEHEIGHT, this.frame);
 
-
 		//Afficher du texte
 		// Màj et dessine le score
 		scoreDisplay.setText("Score: " +  PacmanGame.score);
 		scoreDisplay.drawText(g2d, 10, 20);
 
+		//Afficher chrono
+		chronoDisplay.setText("Timer : " + (PacmanGame.DURATION - PacmanGame.secondsPassed));
+		chronoDisplay.drawText(g2d, 420, 20);
+
+		//Afficher Vie
+		for(int i=0; i<90; i=i+30) {
+			int heart = i/30 + 1;
+			if(PacmanGame.life >= heart*2) g.drawImage(coeurPlein, WIDTH-100+i, 10, 28, 28, this.frame);
+			else if(PacmanGame.life == heart*2-1) g.drawImage(coeurDemi, WIDTH-100+i, 10, 28, 28, this.frame);
+			else g.drawImage(coeurVide, WIDTH-100+i, 10, 28, 28, this.frame);
+		}
+
+		//Si le jeu est en pause
+		if(PacmanGame.gameInPause) g.drawImage(pauseImage, 0, 0, this.frame);
 	}
 
 	@Override

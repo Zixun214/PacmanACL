@@ -5,13 +5,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import engine.Cmd;
 import engine.Game;
+import engine.GameEngineGraphical;
 import jeu.Case;
 import jeu.EntiteeMonstre;
 import jeu.FireBomb;
 import jeu.PlateauDeJeu;
+import start.Main;
+
+import javax.swing.*;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -29,6 +35,8 @@ public class PacmanGame implements Game {
 	public static int sidePacman = 2; //2 = base, 4 = gauche, 6 = droite, 8 = haut
 
 	public static int isHit = 0;
+	public static int life = 6;
+	public static int cooldownHit = 0;
 
 	protected static final int iniPosX = 90 - cercleDiametre / 2;
 	protected static final int iniPosY = 90 - cercleDiametre / 2;
@@ -37,6 +45,7 @@ public class PacmanGame implements Game {
 	public static int posPacmanY;
 
 	public static final int pas = 10;
+
 	/**
 	 * le plateau de jeu
 	 */
@@ -44,14 +53,22 @@ public class PacmanGame implements Game {
 
 
 	public static int lastButtonPressed = 0;
+	public static boolean gameInPause = false;
 
 	public static int score = 0;
+
+	public Timer timer;
+
+	public static int DURATION = 240;
+
+	public static int secondsPassed = 0;
 
 
 	/**
 	 * constructeur avec fichier source pour le help
 	 */
 	public PacmanGame(String source) {
+		this.timer = new Timer();
 		this.plateauDeJeu = new PlateauDeJeu();
 		initialisation();
 		BufferedReader helpReader;
@@ -81,10 +98,12 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public void evolve(Cmd commande) {
-		if (commande == Cmd.IDLE || commande == null) {
+		if(commande == Cmd.PAUSE) gameInPause = !gameInPause;
+		if (commande == Cmd.IDLE || commande == null || gameInPause) {
 			PacmanGame.sidePacman = 0;
 			return;
 		}
+		if(cooldownHit > 0) cooldownHit--;
 		//System.out.println("Execute " + commande);
 		switch (commande) {
 			//2 conditions pour déterminer le mur
@@ -127,11 +146,24 @@ public class PacmanGame implements Game {
 		}
 		collisionJoueurMonstre();
 		if (isFinished()){
-			System.out.println("Congrats! You won!");
-			System.exit(0);
+			if(life <= 0){
+				System.out.println("You died!");
+				Main.winTurn=false;
+			} else {
+				System.out.println("Congrats! You won!");
+				PacmanGame.score+=30;
+			}
 
 		}
 		plateauDeJeu.gameEvent();
+	}
+
+	/**
+	 * verifier si le jeu est en pause
+	 */
+	@Override
+	public boolean isPaused() {
+		return gameInPause;
 	}
 
 	/**
@@ -139,6 +171,7 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public boolean isFinished() {
+		if(life <= 0) return true;
 		int xCurr = (PacmanGame.posPacmanX - PacmanGame.posPacmanX%10) / 60;
 		int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
 		Case current = plateauDeJeu .getCase(xCurr, yCurr);
@@ -155,6 +188,7 @@ public class PacmanGame implements Game {
 			if ((monstre.positionX + cercleDiametreReel >= posPacmanX) && (monstre.positionX - cercleDiametreReel <= posPacmanX)
 					&& ((monstre.positionY + cercleDiametreReel >= posPacmanY) && (monstre.positionY - cercleDiametreReel <= posPacmanY))) {
 				PacmanGame.isHit = 1;
+				takeDamage();
 			}
 		}
 	}
@@ -174,6 +208,17 @@ public class PacmanGame implements Game {
 					monstre.positionX = -90;monstre.positionY=-90;
 					PacmanGame.score += 10;
 			}
+		}
+	}
+
+	/**
+	 * Retire la vie du personnage suite à une collision
+	 */
+	public void takeDamage() {
+		if(cooldownHit > 0) return;
+		else {
+			cooldownHit = 10;
+			PacmanGame.life --;
 		}
 	}
 
@@ -200,4 +245,26 @@ public class PacmanGame implements Game {
 		PacmanGame.posPacmanX = x;
 		PacmanGame.posPacmanY = y;
 	}
+
+	public void startTimer() {
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			public void run() {
+				if (secondsPassed < DURATION) {
+					//System.out.println("Seconds passed: " + secondsPassed);
+					if(!gameInPause)
+						secondsPassed++;
+				} else {
+					//System.out.println("Timer expired. Task completed.");
+					timer.cancel(); // Stop the timer when the duration is reached
+					System.out.println("Out of time !");
+					System.exit(0);
+				}
+			}
+		};
+
+		// Schedule the task to run every 1000 milliseconds (1 second)
+		timer.scheduleAtFixedRate(task, 0, 1000);
+	}
+
 }

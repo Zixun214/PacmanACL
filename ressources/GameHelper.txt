@@ -4,3 +4,4 @@ Press key below to move :
 "s" to go down
 "q" to go left
 "d" to go right
+"p" to pause the game

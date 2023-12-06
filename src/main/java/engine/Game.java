@@ -17,6 +17,11 @@ public interface Game {
 	public void evolve(Cmd userCmd);
 
 	/**
+	 * @return true si et seulement si le main.java.jeu est en pause
+	 */
+	public boolean isPaused();
+
+	/**
 	 * @return true si et seulement si le main.java.jeu est fini
 	 */
 	public boolean isFinished();

@@ -59,7 +59,11 @@ package jeu #LightBlue{
     class CaseTresor{
     }
 
+    class EntiteeChronometre{
+    }
 
+    class EntiteeSoin{
+    }
 
     class CaseMur{
       Color getColor();
@@ -85,6 +89,7 @@ package jeu #LightBlue{
         int positionX;
         int positionY;
         void initialiserMonstre(PlateauDeJeu pdj);
+        void deplacement();
     }
 
 
