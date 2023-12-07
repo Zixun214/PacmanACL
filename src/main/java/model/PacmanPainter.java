@@ -13,10 +13,7 @@ import java.awt.Graphics;
 
 import engine.GamePainter;
 import engine.TextManager;
-import jeu.Case;
-import jeu.CaseMur;
-import jeu.EntiteeMonstre;
-import jeu.FireBomb;
+import jeu.*;
 
 import javax.imageio.ImageIO;
 
@@ -133,6 +130,8 @@ public class PacmanPainter implements GamePainter {
 		BufferedImage[] chronoAnimation = new BufferedImage[8];
 		BufferedImage[] chestAnimation = new BufferedImage[1];
 		BufferedImage[] teleportAnimation = new BufferedImage[3];
+
+		Joueur player = PacmanGame.plateauDeJeu.getPlayer(); //récupère le joueur
 		try {
 			String side = "";
 			switch (PacmanGame.lastButtonPressed){
@@ -144,7 +143,7 @@ public class PacmanPainter implements GamePainter {
 				default: break;
 			}
 			for(int i = 0; i < 17; i++) {
-				if (PacmanGame.isHit == 0) {
+				if (!player.isHit()) {
 					if (PacmanGame.sidePacman == 0) {
 						pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_walk" + side + "_0000.png"));
 						//if (i < 10) pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_winA_000" + i + ".png"));
@@ -158,7 +157,8 @@ public class PacmanPainter implements GamePainter {
 					else pacmanAnimation[i] = ImageIO.read(new File("ressources/hero_hitA_00" + i + ".png"));
 					if (i == 16) timerCollision++;
 					if (timerCollision == timerCollisionMAXVALUE) {
-						PacmanGame.isHit = 0;timerCollision = 0;
+						player.setHit(false);
+						timerCollision = 0;
 					}
 				}
 			}
@@ -254,8 +254,8 @@ public class PacmanPainter implements GamePainter {
 		//Afficher Vie
 		for(int i=0; i<90; i=i+30) {
 			int heart = i/30 + 1;
-			if(PacmanGame.life >= heart*2) g.drawImage(coeurPlein, WIDTH-100+i, 10, 28, 28, this.frame);
-			else if(PacmanGame.life == heart*2-1) g.drawImage(coeurDemi, WIDTH-100+i, 10, 28, 28, this.frame);
+			if(player.getLife() >= heart*2) g.drawImage(coeurPlein, WIDTH-100+i, 10, 28, 28, this.frame);
+			else if(player.getLife() == heart*2-1) g.drawImage(coeurDemi, WIDTH-100+i, 10, 28, 28, this.frame);
 			else g.drawImage(coeurVide, WIDTH-100+i, 10, 28, 28, this.frame);
 		}
 

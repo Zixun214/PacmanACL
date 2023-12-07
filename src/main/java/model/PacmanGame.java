@@ -11,10 +11,7 @@ import java.util.TimerTask;
 import engine.Cmd;
 import engine.Game;
 import engine.GameEngineGraphical;
-import jeu.Case;
-import jeu.EntiteeMonstre;
-import jeu.FireBomb;
-import jeu.PlateauDeJeu;
+import jeu.*;
 import start.Main;
 
 import javax.swing.*;
@@ -34,10 +31,6 @@ public class PacmanGame implements Game {
 
 	public static int sidePacman = 2; //2 = base, 4 = gauche, 6 = droite, 8 = haut
 
-	public static int isHit = 0;
-	public static int life = 6;
-	public static int cooldownHit = 0;
-
 	protected static final int iniPosX = 90 - cercleDiametre / 2;
 	protected static final int iniPosY = 90 - cercleDiametre / 2;
 
@@ -54,7 +47,6 @@ public class PacmanGame implements Game {
 
 	public static int lastButtonPressed = 0;
 	public static boolean gameInPause = false;
-
 	public static int score = 0;
 
 	public Timer timer;
@@ -63,13 +55,17 @@ public class PacmanGame implements Game {
 
 	public static int secondsPassed = 0;
 
+	private Joueur player;
+
 
 	/**
 	 * constructeur avec fichier source pour le help
 	 */
 	public PacmanGame(String source) {
 		this.timer = new Timer();
+		this.player = new Joueur(PacmanGame.iniPosX, PacmanGame.iniPosY); //initialise le joueur
 		this.plateauDeJeu = new PlateauDeJeu();
+		this.plateauDeJeu.setPlayer(player);
 		initialisation();
 		BufferedReader helpReader;
 		try {
@@ -103,7 +99,7 @@ public class PacmanGame implements Game {
 			PacmanGame.sidePacman = 0;
 			return;
 		}
-		if(cooldownHit > 0) cooldownHit--;
+		if(player.getCooldownHit() > 0) player.setCooldownHit(player.getCooldownHit() - 1);
 		//System.out.println("Execute " + commande);
 		switch (commande) {
 			//2 conditions pour déterminer le mur
@@ -146,7 +142,7 @@ public class PacmanGame implements Game {
 		}
 		collisionJoueurMonstre();
 		if (isFinished()){
-			if(life <= 0){
+			if(player.getLife() <= 0){
 				System.out.println("You died!");
 				Main.winTurn=false;
 			} else {
@@ -171,7 +167,7 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public boolean isFinished() {
-		if(life <= 0) return true;
+		if(player.getLife() <= 0) return true;
 		int xCurr = (PacmanGame.posPacmanX - PacmanGame.posPacmanX%10) / 60;
 		int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
 		Case current = plateauDeJeu .getCase(xCurr, yCurr);
@@ -187,7 +183,7 @@ public class PacmanGame implements Game {
 			EntiteeMonstre monstre = it.next();
 			if ((monstre.positionX + cercleDiametreReel >= posPacmanX) && (monstre.positionX - cercleDiametreReel <= posPacmanX)
 					&& ((monstre.positionY + cercleDiametreReel >= posPacmanY) && (monstre.positionY - cercleDiametreReel <= posPacmanY))) {
-				PacmanGame.isHit = 1;
+				player.setHit(true);
 				takeDamage();
 			}
 		}
@@ -215,10 +211,10 @@ public class PacmanGame implements Game {
 	 * Retire la vie du personnage suite à une collision
 	 */
 	public void takeDamage() {
-		if(cooldownHit > 0) return;
+		if(player.getCooldownHit() > 0) return;
 		else {
-			cooldownHit = 10;
-			PacmanGame.life --;
+			player.setCooldownHit(10);
+			player.setLife(player.getLife() - 1);
 		}
 	}
 
