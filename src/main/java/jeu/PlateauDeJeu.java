@@ -19,6 +19,7 @@ public class PlateauDeJeu {
     public FireBomb solofireBomb;
 
     private ArrayList<EntiteeMonstre> entiteeMonstres;
+    private Joueur player;
 
     public PlateauDeJeu() {
         this(new Random().nextInt());
@@ -27,6 +28,7 @@ public class PlateauDeJeu {
     public PlateauDeJeu(int randomSeed) {
         this.cases = new ArrayList<>(largeur * hauteur); //Modélisation du plateau de jeu
         this.entiteeMonstres = new ArrayList<>();
+        this.player = new Joueur(0,0);
         this.solofireBomb = new FireBomb(-90,-90); //TODO set solofireBomb inexistant at the beginning
         System.out.println("Seed: " + randomSeed);
         genererPlateau(randomSeed);
@@ -76,9 +78,27 @@ public class PlateauDeJeu {
         cases.set(caseTP, new CaseTP(getXcase(caseCible),getYcase(caseCible))); //remplace une case chemin par une case trésor
     }
 
+    public void genererCaseEau(int nb){
+        while (nb > 0){
+            int index = choisirCase();
+            if (index != 18 && index != 32) {
+                cases.set(index, new CaseEau()); //remplace une case chemin par une case Eau
+                nb--;
+            }
+        }
+    }
+
+    public void genererCaseNatation(){
+        if (cases.get(18).isBlocking()){
+            cases.set(33, new CaseNatation());
+        } else {
+            cases.set(18, new CaseNatation());
+        }
+    }
+
     public int choisirCase(){
         int index = 0;
-        while (cases.get(index).isBlocking() || index == 17){ //tant que la case est bloquante (mur) ou que c'est la case de départ
+        while (cases.get(index).isSpecial() || index == 17){ //tant que la case est bloquante (mur) ou que c'est la case de départ
             index = (int) (Math.random() * cases.size()-1); //on génère un index aléatoire
         }
         return index;
@@ -116,6 +136,8 @@ public class PlateauDeJeu {
         }
 
         genererMonstre();
+        genererCaseNatation();
+        genererCaseEau(5);
         genererCaseTP();
         genererCaseChrono(nombreDeCaseChronoPlus);
         genererCaseTresor();
@@ -126,7 +148,7 @@ public class PlateauDeJeu {
         int yCurr = (PacmanGame.posPacmanY - PacmanGame.posPacmanY%10) / 60;
         // va chercher la case sur laquelle se trouve le joueur
         Case current = this.getCase(xCurr, yCurr);
-        current.event(); //execute l'event de la case
+        current.event(player); //execute l'event de la case
     }
 
     public boolean isMurDessous(int x, int y){
@@ -214,4 +236,11 @@ public class PlateauDeJeu {
         return hauteur;
     }
 
+    public Joueur getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Joueur player) {
+        this.player = player;
+    }
 }

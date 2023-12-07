@@ -19,9 +19,9 @@ public class Joueur extends Entitee{
         return swim;
     }
 
-    public void diminuerTempsRestant(long debut){
+    public void diminuerTempsRestant(long delta){
         if (tempsRestant > 0) {
-            tempsRestant -= System.currentTimeMillis() - debut;
+            tempsRestant -= delta;
         } else {
             swim = true;
         }
@@ -49,5 +49,9 @@ public class Joueur extends Entitee{
 
     public void setHit(boolean hit) {
         isHit = hit;
+    }
+
+    public long getTempsRestant() {
+        return tempsRestant;
     }
 }

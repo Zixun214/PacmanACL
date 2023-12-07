@@ -23,7 +23,7 @@ public class CaseTP extends Case{
     }
 
     @Override
-    public void event() {
+    public void event(Joueur player) {
         if (isActivated){
             PacmanGame.teleportation(targetX, targetY);
             isActivated = false;

@@ -234,6 +234,18 @@ public class PacmanPainter implements GamePainter {
 				Image imgC = teleportAnimation[frameIndexTeleportation];
 				g.drawImage(imgC, PacmanGame.plateauDeJeu.getXcase(i)*SCALEWIDTH, PacmanGame.plateauDeJeu.getYcase(i)*SCALEHEIGHT  , SCALEWIDTH, SCALEHEIGHT , this.frame);
 			}
+			//Case Natation
+			if(casePlateau.getColor() == Color.BLACK){
+				g2d = (Graphics2D) im.getGraphics();
+				g2d.setColor(Color.BLACK);
+				g2d.fillRect(PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60, 60, 60);
+			}
+
+			if(casePlateau.getColor() == Color.BLUE){
+				g2d = (Graphics2D) im.getGraphics();
+				g2d.setColor(Color.BLUE);
+				g2d.fillRect(PacmanGame.plateauDeJeu.getXcase(i)*60, PacmanGame.plateauDeJeu.getYcase(i)*60, 60, 60);
+			}
 		}
 
 

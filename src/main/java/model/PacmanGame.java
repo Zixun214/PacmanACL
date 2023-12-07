@@ -95,7 +95,7 @@ public class PacmanGame implements Game {
 	@Override
 	public void evolve(Cmd commande) {
 		if(commande == Cmd.PAUSE) gameInPause = !gameInPause;
-		if (commande == Cmd.IDLE || commande == null || gameInPause) {
+		if (commande == null || gameInPause) {
 			PacmanGame.sidePacman = 0;
 			return;
 		}

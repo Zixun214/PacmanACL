@@ -20,7 +20,7 @@ public class CaseChrono extends Case{
     }
 
     @Override
-    public void event(){
+    public void event(Joueur player){
         if(this.eventOn == true) {
             PacmanGame.DURATION += 30;
             removeCaseFromMap();
