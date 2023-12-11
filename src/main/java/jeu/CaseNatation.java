@@ -20,7 +20,7 @@ public class CaseNatation extends Case{
         if (!player.canSwim()) {
             long currentTime = System.currentTimeMillis();
             long deltaTime = currentTime - lastTime;
-            if (deltaTime < 100) {
+            if (deltaTime < 300) {
                 player.diminuerTempsRestant(deltaTime);
             }
             lastTime = currentTime;
