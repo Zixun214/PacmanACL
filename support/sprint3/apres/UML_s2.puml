@@ -1,0 +1,275 @@
+@startuml
+
+package jeu #LightBlue{
+    abstract class Entitee
+
+    class Joueur{
+        boolean swin;
+        long tempsRestant;
+        boolean isHit;
+        int life;
+        int cooldownHit;
+        boolean canSwim();
+        void diminuerTempsRestant(long delta);
+        boolean isHit();
+    }
+
+    class PlateauDeJeu{
+        int largeur;
+        int hauteur;
+        int nombreDeMonstre;
+        int nombreDeCaseChronoPlus;
+        void initialiserMonstre();
+        void genererMonstre();
+        void genererCaseTresor();
+        void genererCaseChrono();
+        void genererCaseTP();
+        void genererCaseEau();
+        void genererCaseNatation();
+        int choisirCase();
+        void genererPlateau();
+        void gameEvent(Joueur player);
+        boolean isMurDessous(int x, int y);
+        boolean isMurDessus(int x, int y);
+        boolean isMurADroite(int x, int y);
+        boolean isMurAGauche(int x, int y);
+        Case getCase(int x, int y);
+        ArrayList<Case> getCases();
+        int getXcase(int index);
+        int getYcase(int index);
+        int choisirCase();
+        boolean isMurDessous(int x, int y);
+        Iterator<EntiteeMonstre> monstreIterator();
+    }
+
+    class Vertex{
+        String id;
+        boolean visited;
+        void addNeighbor(Vertex v);
+        void addPath(Vertex v);
+        boolean isVisited();
+        void removeNeighbor(Vertex v);
+        ArrayList<Vertex> getNeighbors();
+        ArrayList<Vertex> getPath();
+        boolean hasPath(Vertex target);
+        String getId();
+        void setVisited(boolean b);
+    }
+
+    class Labyrinthe{
+        int height;
+        int width;
+        void create();
+        void create(int seed);
+        Case getcase(int i, int j);
+    }
+
+    class FireBomb
+
+
+    abstract Entitee{
+        int positionX;
+        int positionY;
+    }
+
+    class EntiteeMonstre{
+        void initialiserMonstre(PlateauDeJeu pdj);
+        void deplacement();
+    }
+
+    package case #Purple{
+            abstract class Case{
+               boolean blocking;
+               void event(Joueur playeur);
+               boolean isBlocking();
+               boolean isTresor();
+               boolean isSpecial();
+               Color getColor();
+               boolean isTresor();
+            }
+            class CaseChemin
+            class CaseChrono
+            class CaseTresor
+            class CaseEau
+            class CaseNatation
+
+            class CaseMur{
+              boolean estMurdeCote();
+              void setMurdeCode();
+            }
+
+            class CaseChemin
+
+            class CaseTP
+
+            CaseTP --|> Case
+            CaseTresor --|> Case
+            CaseMur --|> Case
+            CaseChemin --|> Case
+            CaseChrono --|> Case
+            CaseEau --|> Case
+            CaseNatation --|> Case
+    }
+
+    Entitee --"1" Random
+    EntiteeMonstre --|> Entitee
+    Joueur --|> Entitee
+    FireBomb --|> Entitee
+    PlateauDeJeu --"*" Case
+    PlateauDeJeu --"*" EntiteeMonstre
+    Labyrinthe --"*" Vertex
+    Vertex --"*" Vertex
+    PlateauDeJeu --"1" FireBomb
+    PlateauDeJeu --"1" Joueur
+}
+
+package model #LightGreen{
+    class PacmanGame{
+        int posPacmanX
+        int posPacmanY
+        int cercleDiametre;
+        int iniPosX;
+        int iniPoxY;
+        int sidePacman;
+        int pas;
+        int score;
+        boolean gameInPause;
+        void initialisation();
+        void collisionJoueurMonstre();
+        void collisionBombeMonstre();
+        void fire();
+        void teleportation();
+    }
+
+    class PacmanPainter{
+        int width
+        int height
+    }
+
+    class PacmanGameController{
+        Cmd commandeEnCours
+        keyPressed(keyEvent e)
+        keyReleased(keyEvent e)
+    }
+}
+
+package engine #DarkOrange{
+
+    enum Cmd{
+      LEFT
+      RIGHT
+      UP
+      DOWN
+      IDLE
+    }
+
+    interface Game{
+        void evolve(Cmd userCmd)
+        boolean isFinished()
+        void teleportation(int x, int y)
+    }
+
+
+    interface GameController{
+        Cmd getCommand()
+    }
+
+    class PacmanGameController{
+        Cmd commandeEnCours
+        keyPressed(keyEvent e)
+        keyReleased(keyEvent e)
+    }
+
+    interface GamePainter{
+        void draw(BufferedImage im
+    }
+
+
+    class DrawingPanel{
+        BufferedImage nextImage
+        BufferedImage currentImage
+        int width
+        int height
+        void drawGame()
+        paint(graphics g)
+    }
+
+    class GraphicalInterface{
+        void paint()
+    }
+
+    class GameEngineGraphical{
+        void run()
+    }
+
+    class Character{
+        int posX
+        int posY
+        int speed
+        int direction
+        void move()
+        void draw()
+    }
+
+    class TextManagerGL{
+        int textureId;
+        void renderText(string text,float x,float y);
+        void initializeCharacters(String fontMetadataPath);
+        void parseFntFile(String path);
+        Map<String, String> parseValues(String line);
+        int loadTexture(String path);
+        void cleanup();
+    }
+
+
+    TextManagerGL --"*" Character
+    PacmanGame -.-|> Game
+    PacmanGameController -.-|> GameController
+    PacmanPainter -.-|> GamePainter
+    PacmanGameController --"1" Cmd
+
+    DrawingPanel --"1" GamePainter
+    GraphicalInterface --"1" DrawingPanel
+
+    GameEngineGraphical --"1" GraphicalInterface
+    GameEngineGraphical --"1" Game
+    GameEngineGraphical --"1" GameController
+    GameEngineGraphical --"1" GamePainter
+}
+
+PacmanGame --"1" PlateauDeJeu
+
+package start #LightPink{
+    class StartMenu{
+        long menuWindow;
+        boolean startClickable;
+        void run();
+        void init();
+        void loop();
+    }
+
+    class StartButton{
+        foat x;
+        float y;
+        float width;
+        float height;
+        float borderWidth;
+        float borderColor[];
+        float buttonColor[];
+        boolean isIncluded(float mx, float my);
+        void drawButton();
+        boolean isHovered(float mx, float my);
+        void drawButtonWithBorder();
+    }
+
+    class Main{
+        boolean StartGame;
+    }
+
+    StartMenu --"1" StartButton
+    StartMenu --"1" TextManagerGL
+}
+
+
+
+@enduml
