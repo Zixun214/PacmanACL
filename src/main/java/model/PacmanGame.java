@@ -253,7 +253,7 @@ public class PacmanGame implements Game {
 				} else {
 					//System.out.println("Timer expired. Task completed.");
 					timer.cancel(); // Stop the timer when the duration is reached
-					System.out.println("Out of time !");
+					System.out.println("Out of time! Here is your points: "+PacmanGame.score+"\n  Thanks for playing our games !");
 					System.exit(0);
 				}
 			}
