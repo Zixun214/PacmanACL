@@ -18,28 +18,10 @@ public class Main {
 	public static boolean StartGame=false;
 	public static boolean winTurn=true;
 	public static void main(String[] args) throws InterruptedException {
-		if (args.length > 0 && "swing".equals(args[0])) {
-			runGame();
-		} else {
-			startMenu();
-			if(!StartGame) {
-				System.out.println("Game close.");
-				return;
-			}
-
-			//***** new process pour le jeu
-			//because need to function on mac.
-			try {
-				String currentDir = Paths.get("").toAbsolutePath().toString();
-				String jarPath = currentDir.endsWith("target") ? "JeuTemplate-1.0-SNAPSHOT.jar" : "target/JeuTemplate-1.0-SNAPSHOT.jar";
-				ProcessBuilder pb = new ProcessBuilder("java", "-jar", jarPath, "swing");
-				pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-				pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-				pb.start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}//*****
-		}
+		startMenu();
+		if(!StartGame)
+			return;
+		runGame();
 		while (true){
 			int option;
 			if(winTurn){
